@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Data Jualan — Kantin Dapo Hakaksado</title>
+<style>
+  :root{
+    --maroon:#7B1E3B; --maroon-dark:#5C1329; --orange:#E07B29;
+    --cream:#FDF6F0; --blush:#FBEAEA; --ink:#2B1B20; --muted:#8a7078;
+    --ok:#1f9d55; --danger:#c0392b; --line:#f0dcdc;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:"Segoe UI",system-ui,-apple-system,Roboto,sans-serif;background:var(--cream);color:var(--ink)}
+  button{font-family:inherit;cursor:pointer;border:none}
+  .topbar{
+    background:linear-gradient(120deg,var(--maroon-dark),var(--maroon) 50%,#96264a);
+    background-size:200% 200%;animation:shift 14s ease infinite;
+    color:#fff;padding:14px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+    position:sticky;top:0;z-index:40;box-shadow:0 4px 18px rgba(92,19,41,.25)
+  }
+  @keyframes shift{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+  .topbar h1{font-size:1.15rem;letter-spacing:1px}
+  .link{color:#FFD79B;text-decoration:none;font-weight:700;font-size:.9rem;padding:8px 14px;border:1px solid rgba(255,255,255,.35);border-radius:999px;transition:.25s}
+  .link:hover{background:rgba(255,255,255,.15)}
+  .spacer{flex:1}
+  .clock{background:rgba(0,0,0,.25);padding:8px 16px;border-radius:999px;font-weight:700;font-variant-numeric:tabular-nums}
+
+  .wrap{max-width:1280px;margin:0 auto;padding:18px}
+  .panel{background:#fff;border-radius:18px;box-shadow:0 6px 20px rgba(92,19,41,.08);margin-bottom:18px;overflow:hidden;
+    opacity:0;transform:translateY(16px);animation:rise .55s ease forwards}
+  .panel:nth-child(2){animation-delay:.08s}.panel:nth-child(3){animation-delay:.16s}
+  .panel:nth-child(4){animation-delay:.24s}.panel:nth-child(5){animation-delay:.32s}
+  @keyframes rise{to{opacity:1;transform:none}}
+  .panel-head{background:var(--maroon);color:#fff;padding:12px 18px;font-weight:800;letter-spacing:.5px;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  .panel-head .spacer{flex:1}
+  .pad{padding:16px 18px}
+
+  /* period selector */
+  .periods{display:flex;gap:8px;flex-wrap:wrap;padding:14px 18px;border-bottom:1px solid var(--line)}
+  .pbtn{padding:11px 20px;border-radius:999px;background:var(--blush);color:var(--maroon);font-weight:800;font-size:.9rem;transition:transform .2s,background .2s,color .2s}
+  .pbtn:hover{transform:translateY(-2px)}
+  .pbtn.active{background:linear-gradient(135deg,var(--maroon),#a5335a);color:#fff;box-shadow:0 6px 16px rgba(123,30,59,.3)}
+  .dateRow{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:0 18px 14px;font-size:.9rem;color:var(--muted)}
+  .dateRow input{padding:9px 12px;border:2px solid var(--line);border-radius:10px;font-family:inherit}
+  .dateRow input:focus{outline:none;border-color:var(--orange)}
+
+  /* KPI */
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;padding:16px 18px}
+  .kpi{background:linear-gradient(160deg,#fff,#fff7f2);border-radius:16px;padding:18px;border-left:6px solid var(--orange);
+    transition:transform .25s,box-shadow .25s}
+  .kpi:hover{transform:translateY(-4px);box-shadow:0 12px 26px rgba(92,19,41,.14)}
+  .kpi:nth-child(2){border-left-color:var(--maroon)}
+  .kpi:nth-child(3){border-left-color:var(--ok)}
+  .kpi:nth-child(4){border-left-color:#3a7bd5}
+  .kpi:nth-child(5){border-left-color:#8e44ad}
+  .kpi .l{font-size:.75rem;text-transform:uppercase;letter-spacing:1px;color:var(--muted);font-weight:800}
+  .kpi .v{font-size:1.75rem;font-weight:900;color:var(--maroon);margin-top:6px;font-variant-numeric:tabular-nums}
+  .kpi .s{font-size:.8rem;color:var(--muted);margin-top:3px}
+
+  /* chart */
+  .chart{display:flex;align-items:flex-end;gap:6px;height:240px;padding:20px 18px 8px;overflow-x:auto}
+  .bar{flex:1;min-width:26px;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;height:100%;gap:6px}
+  .bar .fill{
+    width:100%;border-radius:8px 8px 4px 4px;background:linear-gradient(180deg,var(--orange),var(--maroon));
+    height:0;transition:height .8s cubic-bezier(.2,.9,.3,1);position:relative;min-height:3px
+  }
+  .bar .fill:hover{filter:brightness(1.15)}
+  .bar .fill::after{
+    content:attr(data-v);position:absolute;top:-22px;left:50%;transform:translateX(-50%);
+    font-size:.7rem;font-weight:800;color:var(--maroon);white-space:nowrap;opacity:0;transition:.2s
+  }
+  .bar:hover .fill::after{opacity:1}
+  .bar .lb{font-size:.68rem;color:var(--muted);font-weight:700;text-align:center;white-space:nowrap}
+  .bar.peak .fill{background:linear-gradient(180deg,#2fbd6b,var(--ok));box-shadow:0 0 0 2px #d8f5e2}
+
+  /* tables */
+  table{width:100%;border-collapse:collapse;font-size:.88rem}
+  th{background:var(--orange);color:#fff;text-align:left;padding:11px 14px;font-size:.76rem;text-transform:uppercase;letter-spacing:.6px;position:sticky;top:0}
+  td{padding:10px 14px;border-bottom:1px solid var(--line)}
+  tbody tr{transition:background .18s}
+  tbody tr:hover{background:var(--blush)}
+  .r{text-align:right;font-variant-numeric:tabular-nums;font-weight:700}
+  .scroll{max-height:420px;overflow:auto}
+  .items-cell{color:var(--muted);font-size:.82rem}
+  .empty{padding:40px;text-align:center;color:var(--muted)}
+  .empty span{display:block;font-size:2.6rem;margin-bottom:10px;animation:bob 2.4s ease-in-out infinite}
+  @keyframes bob{50%{transform:translateY(-8px)}}
+
+  .btn{padding:10px 16px;border-radius:10px;font-weight:800;font-size:.84rem;transition:transform .18s,filter .18s}
+  .btn:hover{transform:translateY(-2px)}
+  .btn-csv{background:var(--ok);color:#fff}
+  .btn-print{background:#3a7bd5;color:#fff}
+  .btn-del{background:#fff;color:var(--danger);border:2px solid var(--danger)}
+  .btn-del:hover{background:var(--danger);color:#fff}
+  .toolbar{display:flex;gap:10px;flex-wrap:wrap;padding:14px 18px;background:#fffaf6;border-top:1px solid var(--line)}
+  .note{font-size:.8rem;color:var(--muted);padding:0 18px 16px}
+  @media print{.topbar,.toolbar,.periods,.dateRow{display:none}.panel{box-shadow:none;break-inside:avoid}}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <a class="link" href="kantinhakaksado.html">← Utama</a>
+  <h1>DATA JUALAN</h1>
+  <div class="spacer"></div>
+  <a class="link" href="foodmenu.html">Kaunter 🍽️</a>
+  <div class="clock" id="clock">--:--:--</div>
+</div>
+
+<div class="wrap">
+  <!-- PERIOD -->
+  <div class="panel">
+    <div class="panel-head">📅 PILIH TEMPOH<div class="spacer"></div><span id="periodLabel" style="font-weight:600;font-size:.85rem"></span></div>
+    <div class="periods" id="periods">
+      <button class="pbtn active" data-p="day">Hari Ini</button>
+      <button class="pbtn" data-p="week">Minggu Ini</button>
+      <button class="pbtn" data-p="month">Bulan Ini</button>
+      <button class="pbtn" data-p="year">Tahun Ini</button>
+      <button class="pbtn" data-p="all">Semua Rekod</button>
+    </div>
+    <div class="dateRow">
+      <label for="pickDate" style="font-weight:700">Atau pilih tarikh tertentu:</label>
+      <input type="date" id="pickDate" />
+      <button class="btn btn-print" id="goDate">Lihat Hari Itu</button>
+    </div>
+  </div>
+
+  <!-- KPI -->
+  <div class="panel">
+    <div class="panel-head">💰 RINGKASAN JUALAN</div>
+    <div class="kpis">
+      <div class="kpi"><div class="l">Jumlah Jualan</div><div class="v" id="kTotal">RM0.00</div><div class="s" id="kPeriod">—</div></div>
+      <div class="kpi"><div class="l">Bilangan Transaksi</div><div class="v" id="kTx">0</div><div class="s">resit dikeluarkan</div></div>
+      <div class="kpi"><div class="l">Purata Setiap Resit</div><div class="v" id="kAvg">RM0.00</div><div class="s">jualan / transaksi</div></div>
+      <div class="kpi"><div class="l">Item Terjual</div><div class="v" id="kItems">0</div><div class="s">unit keseluruhan</div></div>
+      <div class="kpi"><div class="l">Waktu Paling Sibuk</div><div class="v" id="kPeak">—</div><div class="s" id="kPeakAmt">berdasarkan masa sebenar</div></div>
+    </div>
+  </div>
+
+  <!-- CHART -->
+  <div class="panel">
+    <div class="panel-head">📈 GRAF JUALAN <span id="chartTitle" style="font-weight:600;font-size:.85rem"></span></div>
+    <div class="chart" id="chart"></div>
+    <div class="note">Hover pada bar untuk lihat jumlah. Bar hijau = tempoh jualan tertinggi.</div>
+  </div>
+
+  <!-- TOP ITEMS -->
+  <div class="panel">
+    <div class="panel-head">🏆 MENU PALING LARIS</div>
+    <div class="scroll">
+      <table><thead><tr><th>#</th><th>Menu</th><th class="r">Kuantiti</th><th class="r">Jumlah (RM)</th></tr></thead>
+      <tbody id="topBody"></tbody></table>
+    </div>
+  </div>
+
+  <!-- TRANSACTIONS -->
+  <div class="panel">
+    <div class="panel-head">🧾 SENARAI TRANSAKSI (MASA SEBENAR)</div>
+    <div class="scroll">
+      <table><thead><tr><th>No. Resit</th><th>Tarikh</th><th>Masa</th><th>Item</th><th class="r">Jumlah</th><th class="r">Tunai</th><th class="r">Baki</th></tr></thead>
+      <tbody id="txBody"></tbody></table>
+    </div>
+    <div class="toolbar">
+      <button class="btn btn-csv" id="csvPeriod">⬇ Muat Turun CSV (tempoh ini)</button>
+      <button class="btn btn-csv" id="csvAll">⬇ Backup Semua Data (CSV)</button>
+      <button class="btn btn-print" id="printBtn">🖨 Cetak Laporan</button>
+      <div class="spacer" style="flex:1"></div>
+      <button class="btn btn-del" id="wipe">🗑 Kosongkan Semua Data</button>
+    </div>
+    <div class="note">Data disimpan dalam pelayar ini sahaja (localStorage). Buat backup CSV setiap hujung hari supaya rekod selamat.</div>
+  </div>
+</div>
+
+<script>
+const KEY='hakaksado_sales_v1';
+const $=id=>document.getElementById(id);
+const rm=n=>'RM'+Number(n||0).toFixed(2);
+const MONTHS=['Jan','Feb','Mac','Apr','Mei','Jun','Jul','Ogo','Sep','Okt','Nov','Dis'];
+const MONTHS_FULL=['Januari','Februari','Mac','April','Mei','Jun','Julai','Ogos','September','Oktober','November','Disember'];
+const DAYS=['Ahad','Isnin','Selasa','Rabu','Khamis','Jumaat','Sabtu'];
+let mode='day', pickedDate=null;
+
+const load=()=>{try{return (JSON.parse(localStorage.getItem(KEY))||[]).sort((a,b)=>new Date(a.ts)-new Date(b.ts))}catch(e){return[]}};
+setInterval(()=>{$('clock').textContent=new Date().toLocaleTimeString('en-GB')},1000);
+$('clock').textContent=new Date().toLocaleTimeString('en-GB');
+
+function range(){
+  const now=new Date();
+  if(pickedDate){
+    const s=new Date(pickedDate+'T00:00:00'), e=new Date(s); e.setDate(s.getDate()+1);
+    return {s,e,label:`${DAYS[s.getDay()]}, ${s.getDate()} ${MONTHS_FULL[s.getMonth()]} ${s.getFullYear()}`,grain:'hour'};
+  }
+  if(mode==='day'){
+    const s=new Date(now.getFullYear(),now.getMonth(),now.getDate()), e=new Date(s); e.setDate(s.getDate()+1);
+    return {s,e,label:`Hari Ini — ${DAYS[s.getDay()]}, ${s.getDate()} ${MONTHS_FULL[s.getMonth()]} ${s.getFullYear()}`,grain:'hour'};
+  }
+  if(mode==='week'){
+    const d=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+    const s=new Date(d); s.setDate(d.getDate()-((now.getDay()+6)%7));
+    const e=new Date(s); e.setDate(s.getDate()+7);
+    const last=new Date(e); last.setDate(e.getDate()-1);
+    return {s,e,label:`Minggu Ini — ${s.getDate()} ${MONTHS[s.getMonth()]} hingga ${last.getDate()} ${MONTHS[last.getMonth()]} ${last.getFullYear()}`,grain:'day'};
+  }
+  if(mode==='month'){
+    const s=new Date(now.getFullYear(),now.getMonth(),1), e=new Date(now.getFullYear(),now.getMonth()+1,1);
+    return {s,e,label:`Bulan ${MONTHS_FULL[now.getMonth()]} ${now.getFullYear()}`,grain:'day'};
+  }
+  if(mode==='year'){
+    const s=new Date(now.getFullYear(),0,1), e=new Date(now.getFullYear()+1,0,1);
+    return {s,e,label:`Tahun ${now.getFullYear()}`,grain:'month'};
+  }
+  return {s:new Date(0),e:new Date(8.64e15),label:'Semua Rekod',grain:'month'};
+}
+
+function render(){
+  const sales=load(), {s,e,label,grain}=range();
+  const rows=sales.filter(x=>{const t=new Date(x.ts);return t>=s&&t<e});
+  $('periodLabel').textContent=label;
+  $('kPeriod').textContent=label;
+  $('chartTitle').textContent=grain==='hour'?'(ikut jam)':grain==='day'?'(ikut hari)':'(ikut bulan)';
+
+  const total=rows.reduce((a,x)=>a+x.total,0);
+  const units=rows.reduce((a,x)=>a+x.items.reduce((b,i)=>b+i.qty,0),0);
+  $('kTotal').textContent=rm(total);
+  $('kTx').textContent=rows.length;
+  $('kAvg').textContent=rm(rows.length?total/rows.length:0);
+  $('kItems').textContent=units;
+
+  /* peak hour by real timestamp */
+  const byHour={};
+  rows.forEach(x=>{const h=new Date(x.ts).getHours();byHour[h]=(byHour[h]||0)+x.total});
+  const peakH=Object.keys(byHour).sort((a,b)=>byHour[b]-byHour[a])[0];
+  $('kPeak').textContent=peakH!==undefined?`${String(peakH).padStart(2,'0')}:00`:'—';
+  $('kPeakAmt').textContent=peakH!==undefined?rm(byHour[peakH])+' pada jam itu':'belum ada jualan';
+
+  /* ---- chart buckets ---- */
+  let buckets=[];
+  if(grain==='hour'){
+    for(let h=7;h<=16;h++) buckets.push({lb:String(h).padStart(2,'0'),v:0});
+    rows.forEach(x=>{
+      const h=new Date(x.ts).getHours(), i=h-7;
+      if(i>=0&&i<buckets.length) buckets[i].v+=x.total;
+      else{ // outside operating hours: append
+        let b=buckets.find(k=>k.lb===String(h).padStart(2,'0'));
+        if(!b){b={lb:String(h).padStart(2,'0'),v:0};buckets.push(b)}
+        b.v+=x.total;
+      }
+    });
+    buckets.sort((a,b)=>a.lb.localeCompare(b.lb));
+  }else if(grain==='day'){
+    const cur=new Date(s);
+    while(cur<e && cur<=new Date()){
+      buckets.push({lb:mode==='week'?DAYS[cur.getDay()].slice(0,3):String(cur.getDate()),key:cur.toDateString(),v:0});
+      cur.setDate(cur.getDate()+1);
+    }
+    rows.forEach(x=>{const k=new Date(x.ts).toDateString();const b=buckets.find(z=>z.key===k);if(b)b.v+=x.total});
+  }else{
+    const yrs=[...new Set(rows.map(x=>new Date(x.ts).getFullYear()))];
+    if(mode==='year'||yrs.length<=1){
+      for(let m=0;m<12;m++) buckets.push({lb:MONTHS[m],key:m,v:0});
+      rows.forEach(x=>{buckets[new Date(x.ts).getMonth()].v+=x.total});
+    }else{
+      yrs.sort().forEach(y=>buckets.push({lb:String(y),key:y,v:0}));
+      rows.forEach(x=>{const y=new Date(x.ts).getFullYear();buckets.find(b=>b.key===y).v+=x.total});
+    }
+  }
+  const max=Math.max(...buckets.map(b=>b.v),1);
+  $('chart').innerHTML=buckets.map(b=>`
+    <div class="bar${b.v===max&&b.v>0?' peak':''}">
+      <div class="fill" data-v="${rm(b.v)}" data-h="${(b.v/max*100).toFixed(1)}"></div>
+      <div class="lb">${b.lb}</div>
+    </div>`).join('');
+  requestAnimationFrame(()=>document.querySelectorAll('.fill').forEach(f=>{f.style.height=f.dataset.h+'%'}));
+
+  /* ---- top items ---- */
+  const agg={};
+  rows.forEach(x=>x.items.forEach(i=>{
+    agg[i.name]=agg[i.name]||{qty:0,amt:0};
+    agg[i.name].qty+=i.qty; agg[i.name].amt+=i.qty*i.price;
+  }));
+  const top=Object.entries(agg).sort((a,b)=>b[1].qty-a[1].qty);
+  $('topBody').innerHTML=top.length
+    ? top.map(([n,d],i)=>`<tr><td>${i+1}</td><td>${n}</td><td class="r">${d.qty}</td><td class="r">${d.amt.toFixed(2)}</td></tr>`).join('')
+    : `<tr><td colspan="4" class="empty"><span>🍽️</span>Tiada jualan dalam tempoh ini.</td></tr>`;
+
+  /* ---- transactions ---- */
+  $('txBody').innerHTML=rows.length
+    ? [...rows].reverse().map(x=>{
+        const t=new Date(x.ts);
+        const items=x.items.map(i=>`${i.qty}× ${i.name}`).join(', ');
+        return `<tr>
+          <td><b>${x.id}</b></td>
+          <td>${t.toLocaleDateString('en-GB')}</td>
+          <td><b>${t.toLocaleTimeString('en-GB')}</b></td>
+          <td class="items-cell">${items}</td>
+          <td class="r">${rm(x.total)}</td>
+          <td class="r">${rm(x.paid)}</td>
+          <td class="r">${rm(x.change)}</td></tr>`;
+      }).join('')
+    : `<tr><td colspan="7" class="empty"><span>🧾</span>Belum ada transaksi. Buka <b>Kaunter</b> untuk mula merekod jualan.</td></tr>`;
+
+  return rows;
+}
+
+/* ---- controls ---- */
+$('periods').addEventListener('click',e=>{
+  const b=e.target.closest('.pbtn'); if(!b) return;
+  mode=b.dataset.p; pickedDate=null; $('pickDate').value='';
+  document.querySelectorAll('.pbtn').forEach(x=>x.classList.toggle('active',x===b));
+  render();
+});
+$('goDate').addEventListener('click',()=>{
+  if(!$('pickDate').value){alert('Sila pilih tarikh dahulu.');return}
+  pickedDate=$('pickDate').value;
+  document.querySelectorAll('.pbtn').forEach(x=>x.classList.remove('active'));
+  render();
+});
+
+/* ---- CSV export ---- */
+function csv(rows,name){
+  if(!rows.length){alert('Tiada data untuk dimuat turun.');return}
+  const head=['No Resit','Tarikh','Masa','Menu','Kuantiti','Harga Seunit (RM)','Jumlah Baris (RM)','Jumlah Resit (RM)','Tunai (RM)','Baki (RM)'];
+  const lines=[head.join(',')];
+  rows.forEach(x=>{
+    const t=new Date(x.ts);
+    x.items.forEach((i,idx)=>{
+      lines.push([x.id,t.toLocaleDateString('en-GB'),t.toLocaleTimeString('en-GB'),
+        '"'+i.name.replace(/"/g,'""')+'"',i.qty,i.price.toFixed(2),(i.qty*i.price).toFixed(2),
+        idx===0?x.total.toFixed(2):'',idx===0?x.paid.toFixed(2):'',idx===0?x.change.toFixed(2):''].join(','));
+    });
+  });
+  lines.push('');
+  lines.push(['JUMLAH BESAR','','','','','','',rows.reduce((a,x)=>a+x.total,0).toFixed(2)].join(','));
+  const blob=new Blob(['\ufeff'+lines.join('\n')],{type:'text/csv;charset=utf-8'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob); a.download=name; a.click(); URL.revokeObjectURL(a.href);
+}
+$('csvPeriod').addEventListener('click',()=>{
+  const {s,e}=range();
+  const rows=load().filter(x=>{const t=new Date(x.ts);return t>=s&&t<e});
+  csv(rows,`jualan-${mode}${pickedDate?'-'+pickedDate:''}-${new Date().toISOString().slice(0,10)}.csv`);
+});
+$('csvAll').addEventListener('click',()=>csv(load(),`backup-jualan-hakaksado-${new Date().toISOString().slice(0,10)}.csv`));
+$('printBtn').addEventListener('click',()=>window.print());
+$('wipe').addEventListener('click',()=>{
+  if(!load().length){alert('Tiada data.');return}
+  if(confirm('PADAM SEMUA data jualan? Tindakan ini tidak boleh dibatalkan.\n\nDisyorkan buat Backup CSV dahulu.')
+   && confirm('Pasti? Tekan OK untuk padam kekal.')){
+    localStorage.removeItem(KEY); render(); alert('Semua data telah dipadam.');
+  }
+});
+
+render();
+window.addEventListener('focus',render);
+</script>
+</body>
+</html>

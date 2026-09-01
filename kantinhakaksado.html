@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Kantin Dapo Hakaksado — Sistem Kantin</title>
+<style>
+  :root{
+    --maroon:#7B1E3B; --maroon-dark:#5C1329; --orange:#E07B29;
+    --cream:#FDF6F0; --blush:#FBEAEA; --ink:#2B1B20; --muted:#8a7078;
+    --ok:#1f9d55; --shadow:0 10px 30px rgba(92,19,41,.15);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:"Segoe UI",system-ui,-apple-system,Roboto,sans-serif;
+    background:var(--cream); color:var(--ink); min-height:100vh; overflow-x:hidden;
+  }
+  /* ---------- animated background ---------- */
+  .bg-blobs{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+  .blob{position:absolute;border-radius:50%;filter:blur(60px);opacity:.35;animation:float 18s ease-in-out infinite}
+  .blob:nth-child(1){width:420px;height:420px;background:var(--maroon);top:-120px;left:-100px}
+  .blob:nth-child(2){width:360px;height:360px;background:var(--orange);bottom:-120px;right:-80px;animation-delay:-6s}
+  .blob:nth-child(3){width:300px;height:300px;background:#f2b3c0;top:40%;left:60%;animation-delay:-11s}
+  @keyframes float{
+    0%,100%{transform:translate(0,0) scale(1)}
+    33%{transform:translate(40px,-30px) scale(1.1)}
+    66%{transform:translate(-30px,25px) scale(.95)}
+  }
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:28px 20px 60px}
+
+  /* ---------- header ---------- */
+  header{
+    background:linear-gradient(120deg,var(--maroon-dark),var(--maroon) 45%,#96264a);
+    background-size:200% 200%; animation:shift 12s ease infinite;
+    color:#fff;border-radius:22px;padding:38px 28px;text-align:center;
+    box-shadow:var(--shadow);position:relative;overflow:hidden;
+  }
+  @keyframes shift{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+  header::after{
+    content:"";position:absolute;inset:0;
+    background:linear-gradient(100deg,transparent 35%,rgba(255,255,255,.18) 50%,transparent 65%);
+    transform:translateX(-100%);animation:sheen 6s ease-in-out infinite;
+  }
+  @keyframes sheen{0%,70%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+  h1{font-size:clamp(1.9rem,5vw,3rem);letter-spacing:2px;line-height:1.1}
+  .tagline{color:#FFD79B;font-weight:700;margin-top:10px;letter-spacing:1px;font-size:.95rem}
+  .clock{
+    margin-top:18px;display:inline-flex;gap:14px;align-items:center;
+    background:rgba(0,0,0,.22);padding:10px 18px;border-radius:999px;font-variant-numeric:tabular-nums;
+  }
+  .clock b{font-size:1.25rem}
+  .pulse{width:9px;height:9px;border-radius:50%;background:#7CFFA0;animation:pulse 1.6s infinite}
+  @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(1.5)}}
+
+  /* ---------- stat cards ---------- */
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px;margin-top:26px}
+  .stat{
+    background:#fff;border-radius:18px;padding:20px;border-left:6px solid var(--orange);
+    box-shadow:0 6px 18px rgba(92,19,41,.08);opacity:0;transform:translateY(18px);
+    animation:rise .6s ease forwards;
+  }
+  .stat:nth-child(2){animation-delay:.1s;border-left-color:var(--maroon)}
+  .stat:nth-child(3){animation-delay:.2s;border-left-color:var(--ok)}
+  .stat:nth-child(4){animation-delay:.3s;border-left-color:#3a7bd5}
+  @keyframes rise{to{opacity:1;transform:none}}
+  .stat .label{font-size:.78rem;text-transform:uppercase;letter-spacing:1px;color:var(--muted);font-weight:700}
+  .stat .value{font-size:1.9rem;font-weight:800;margin-top:6px;color:var(--maroon)}
+  .stat .sub{font-size:.82rem;color:var(--muted);margin-top:4px}
+
+  /* ---------- nav cards ---------- */
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;margin-top:30px}
+  .card{
+    background:#fff;border-radius:22px;padding:28px;text-decoration:none;color:inherit;
+    box-shadow:0 6px 18px rgba(92,19,41,.08);position:relative;overflow:hidden;
+    transition:transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .35s;
+    opacity:0;animation:rise .6s ease forwards
+  }
+  .card:nth-child(2){animation-delay:.12s}
+  .card:nth-child(3){animation-delay:.24s}
+  .card:hover,.card:focus-visible{transform:translateY(-8px) scale(1.015);box-shadow:0 18px 40px rgba(92,19,41,.22);outline:none}
+  .card::before{
+    content:"";position:absolute;top:0;left:0;right:0;height:5px;
+    background:linear-gradient(90deg,var(--maroon),var(--orange));
+    transform:scaleX(0);transform-origin:left;transition:transform .4s
+  }
+  .card:hover::before,.card:focus-visible::before{transform:scaleX(1)}
+  .icon{font-size:2.4rem;display:block;margin-bottom:12px;transition:transform .4s}
+  .card:hover .icon{transform:scale(1.15) rotate(-6deg)}
+  .card h2{font-size:1.25rem;color:var(--maroon);margin-bottom:8px}
+  .card p{color:var(--muted);font-size:.92rem;line-height:1.55}
+  .go{display:inline-block;margin-top:16px;font-weight:800;color:var(--orange);font-size:.9rem}
+  .card:hover .go{animation:nudge .8s ease infinite}
+  @keyframes nudge{50%{transform:translateX(6px)}}
+
+  .info{
+    margin-top:30px;background:var(--blush);border-radius:18px;padding:22px 24px;
+    border-left:6px solid var(--maroon);opacity:0;animation:rise .6s .36s ease forwards
+  }
+  .info h3{color:var(--maroon);margin-bottom:10px;font-size:1.05rem}
+  .info li{margin:6px 0 6px 18px;font-size:.92rem;color:#5b4048}
+  footer{text-align:center;margin-top:34px;color:var(--muted);font-size:.85rem}
+
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="bg-blobs" aria-hidden="true"><span class="blob"></span><span class="blob"></span><span class="blob"></span></div>
+
+<div class="wrap">
+  <header>
+    <h1>KANTIN DAPO HAKAKSADO</h1>
+    <p class="tagline">SISTEM JUALAN & REKOD KANTIN • PENUH & TERKINI</p>
+    <div class="clock"><span class="pulse" aria-hidden="true"></span>
+      <span id="today">—</span><b id="now">--:--:--</b>
+    </div>
+  </header>
+
+  <section class="stats" aria-label="Ringkasan jualan hari ini">
+    <div class="stat"><div class="label">Jualan Hari Ini</div><div class="value" id="sToday">RM0.00</div><div class="sub" id="sTodayCount">0 transaksi</div></div>
+    <div class="stat"><div class="label">Jualan Minggu Ini</div><div class="value" id="sWeek">RM0.00</div><div class="sub" id="sWeekRange">—</div></div>
+    <div class="stat"><div class="label">Jualan Bulan Ini</div><div class="value" id="sMonth">RM0.00</div><div class="sub" id="sMonthName">—</div></div>
+    <div class="stat"><div class="label">Transaksi Terakhir</div><div class="value" id="sLast">—</div><div class="sub" id="sLastAmt">Belum ada jualan</div></div>
+  </section>
+
+  <nav class="grid" aria-label="Menu utama">
+    <a class="card" href="foodmenu.html">
+      <span class="icon" aria-hidden="true">🍽️</span>
+      <h2>Menu & Kaunter Bayaran</h2>
+      <p>Klik makanan yang dipilih pelanggan, sistem kira jumlah automatik. Masukkan duit tunai, baki dikira serta-merta.</p>
+      <span class="go">Buka Kaunter →</span>
+    </a>
+    <a class="card" href="salesdata.html">
+      <span class="icon" aria-hidden="true">📊</span>
+      <h2>Data Jualan</h2>
+      <p>Laporan harian, mingguan, bulanan dan tahunan. Termasuk jam jualan berlaku dan senarai penuh transaksi.</p>
+      <span class="go">Lihat Laporan →</span>
+    </a>
+    <a class="card" href="foodmenu.html#senarai">
+      <span class="icon" aria-hidden="true">📋</span>
+      <h2>Senarai Harga</h2>
+      <p>Semua harga sarapan, nasi & telur, lauk, sayur dan minuman panas/sejuk dalam satu paparan.</p>
+      <span class="go">Semak Harga →</span>
+    </a>
+  </nav>
+
+  <section class="info">
+    <h3>Pesanan & Maklumat</h3>
+    <ul>
+      <li>Sila beratur & bayar sebelum makan.</li>
+      <li>Waktu operasi: 7.00 pagi – 3.00 petang.</li>
+      <li>Data jualan disimpan dalam pelayar ini (localStorage). Buat <em>Backup CSV</em> di halaman Data Jualan setiap hari.</li>
+      <li>Terima kasih atas sokongan anda!</li>
+    </ul>
+  </section>
+
+  <footer>Terima kasih kerana membeli di kantin kami • Sila datang lagi • Kantin Dapo Hakaksado</footer>
+</div>
+
+<script>
+const KEY='hakaksado_sales_v1';
+const load=()=>{try{return JSON.parse(localStorage.getItem(KEY))||[]}catch(e){return[]}};
+const rm=n=>'RM'+Number(n||0).toFixed(2);
+const MONTHS=['Januari','Februari','Mac','April','Mei','Jun','Julai','Ogos','September','Oktober','November','Disember'];
+const DAYS=['Ahad','Isnin','Selasa','Rabu','Khamis','Jumaat','Sabtu'];
+
+function tick(){
+  const d=new Date();
+  document.getElementById('now').textContent=d.toLocaleTimeString('en-GB');
+  document.getElementById('today').textContent=`${DAYS[d.getDay()]}, ${d.getDate()} ${MONTHS[d.getMonth()]} ${d.getFullYear()}`;
+}
+tick(); setInterval(tick,1000);
+
+function countUp(el,target){
+  const start=performance.now(),dur=900;
+  (function step(t){
+    const p=Math.min((t-start)/dur,1);
+    el.textContent=rm(target*(1-Math.pow(1-p,3)));
+    if(p<1) requestAnimationFrame(step);
+  })(start);
+}
+
+function render(){
+  const sales=load(), now=new Date();
+  const startDay=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+  const dow=(now.getDay()+6)%7; // Monday = 0
+  const startWeek=new Date(startDay); startWeek.setDate(startDay.getDate()-dow);
+  const startMonth=new Date(now.getFullYear(),now.getMonth(),1);
+
+  const sum=from=>sales.filter(s=>new Date(s.ts)>=from);
+  const day=sum(startDay), week=sum(startWeek), month=sum(startMonth);
+  const tot=a=>a.reduce((x,s)=>x+s.total,0);
+
+  countUp(document.getElementById('sToday'),tot(day));
+  countUp(document.getElementById('sWeek'),tot(week));
+  countUp(document.getElementById('sMonth'),tot(month));
+  document.getElementById('sTodayCount').textContent=day.length+' transaksi';
+  const endWeek=new Date(startWeek); endWeek.setDate(startWeek.getDate()+6);
+  document.getElementById('sWeekRange').textContent=`${startWeek.getDate()} ${MONTHS[startWeek.getMonth()].slice(0,3)} – ${endWeek.getDate()} ${MONTHS[endWeek.getMonth()].slice(0,3)}`;
+  document.getElementById('sMonthName').textContent=MONTHS[now.getMonth()]+' '+now.getFullYear();
+
+  if(sales.length){
+    const last=sales[sales.length-1], t=new Date(last.ts);
+    document.getElementById('sLast').textContent=t.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+    document.getElementById('sLastAmt').textContent=rm(last.total)+' • '+t.toLocaleDateString('en-GB');
+  }
+}
+render();
+window.addEventListener('focus',render);
+</script>
+</body>
+</html>
