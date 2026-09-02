@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Tetapan — Kantin Dapo Hakaksado</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="app.css" />
+<style>
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .panel+.panel,.cols+.panel,.cols+.cols{margin-top:16px}
+  .kv{display:grid;grid-template-columns:150px 1fr;gap:8px 14px;font-size:.86rem;align-items:center}
+  .kv span{color:var(--muted);font-weight:700}
+  .kv b{font-weight:700;overflow-wrap:anywhere}
+  .dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--muted);margin-right:8px;vertical-align:1px}
+  .dot.ok{background:var(--green)}.dot.warn{background:var(--orange-2)}.dot.err{background:var(--red)}
+  .msg{margin-top:12px;padding:10px 14px;border-radius:12px;font-size:.84rem;line-height:1.5;background:rgba(255,255,255,.05);border:1px solid var(--line)}
+  .msg.ok{background:rgba(62,207,142,.1);border-color:rgba(62,207,142,.3)}
+  .msg.err{background:rgba(240,98,92,.1);border-color:rgba(240,98,92,.3)}
+  .panel p{color:var(--muted);font-size:.84rem;line-height:1.55}
+  .panel .row{margin-top:12px}
+  .loginform{display:flex;flex-direction:column;gap:10px;margin-top:12px}
+  ol.steps{margin:10px 0 0 18px;font-size:.86rem;line-height:1.6;color:var(--text)}
+  ol.steps li{margin-bottom:8px}
+  ol.steps li b{color:#fff}
+  code{background:rgba(0,0,0,.28);border:1px solid var(--line);border-radius:6px;padding:1px 6px;font-size:.8rem;font-family:ui-monospace,Menlo,Consolas,monospace}
+  pre{background:rgba(0,0,0,.28);border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-size:.76rem;overflow:auto;font-family:ui-monospace,Menlo,Consolas,monospace;line-height:1.5;margin-top:8px}
+  details summary{cursor:pointer;font-weight:800;font-size:.9rem;list-style:none;display:flex;align-items:center;gap:8px}
+  details summary::before{content:"▸";color:var(--orange-2);transition:transform .2s}
+  details[open] summary::before{transform:rotate(90deg)}
+  @media (max-width:900px){ .cols{grid-template-columns:1fr} .kv{grid-template-columns:120px 1fr} }
+</style>
+</head>
+<body>
+<aside class="rail" aria-label="Navigasi">
+  <nav>
+    <a class="nav" href="index.html">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg>Utama</a>
+    <a class="nav" href="foodmenu.html">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6"/></svg>Kaunter</a>
+    <a class="nav" href="salesdata.html">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>Laporan</a>
+    <a class="nav" href="menu.html">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><circle cx="7" cy="7" r="1"/></svg>Menu</a>
+    <a class="nav active" aria-current="page" href="settings.html">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Tetapan</a>
+  </nav>
+</aside>
+
+<main>
+  <div class="head">
+    <div>
+      <div class="brand" id="brand">Kantin Dapo Hakaksado</div>
+      <h1><b>Tetapan</b> &amp; Penyegerakan</h1>
+    </div>
+    <div class="head-right">
+      <a id="syncBadge" class="sync" href="settings.html"><i></i>Memuatkan…</a>
+      <div class="clock"><span id="today">—</span><b id="now">--:--:--</b></div>
+    </div>
+  </div>
+
+  <div class="cols">
+    <section class="panel">
+      <h2>Status penyegerakan</h2>
+      <div class="kv" id="kv"></div>
+      <div id="loginBox"></div>
+      <div class="row">
+        <button class="btn sm" id="testBtn" type="button">Uji sambungan</button>
+        <button class="btn sm" id="logoutBtn" type="button" hidden>Log keluar</button>
+        <button class="btn sm" id="reloadBtn" type="button">Muat semula halaman</button>
+      </div>
+      <div class="msg" id="testMsg" hidden></div>
+    </section>
+
+    <section class="panel">
+      <h2>Peranti ini</h2>
+      <p>Nama peranti direkod pada setiap transaksi supaya anda tahu kaunter mana yang membuat jualan.</p>
+      <div class="row" style="align-items:flex-end">
+        <label class="field" style="flex:1;min-width:200px">Nama peranti<input class="input" id="deviceName" type="text" placeholder="cth. Tablet kaunter 1" maxlength="40"></label>
+        <button class="btn sm" id="saveDevice" type="button">Simpan</button>
+      </div>
+      <div id="localBox" style="margin-top:16px"></div>
+    </section>
+  </div>
+
+  <div class="cols">
+    <section class="panel">
+      <h2>Sandaran data</h2>
+      <p>Muat turun sandaran penuh (menu + semua transaksi) sekali-sekala dan simpan di tempat selamat. Fail JSON boleh dipulihkan semula di sini; CSV boleh dibuka dalam Excel.</p>
+      <div class="row">
+        <button class="btn sm primary" id="backupJson" type="button">Muat turun sandaran (JSON)</button>
+        <button class="btn sm" id="backupCsv" type="button">Muat turun semua transaksi (CSV)</button>
+      </div>
+      <div class="row" style="align-items:flex-end">
+        <label class="field" style="flex:1;min-width:220px">Pulihkan dari fail JSON<input class="input" id="restoreFile" type="file" accept="application/json,.json"></label>
+        <button class="btn sm" id="restoreBtn" type="button">Pulihkan</button>
+      </div>
+      <div class="msg" id="restoreMsg" hidden></div>
+    </section>
+
+    <section class="panel">
+      <h2>Tindakan lain</h2>
+      <p><b style="color:#fff">Tetapkan semula menu</b> — gantikan menu semasa dengan senarai dalam fail <code>menu-default.js</code>. Rekod jualan tidak terjejas.</p>
+      <div class="row"><button class="btn sm danger" id="resetMenu" type="button">Tetapkan semula menu ke lalai</button></div>
+      <p style="margin-top:16px"><b style="color:#fff">Padam data tempatan pelayar ini</b> — hanya untuk pelayar ini; data cloud tidak dipadam. Pastikan data lama telah dimuat naik ke cloud atau disandarkan dahulu.</p>
+      <div class="row"><button class="btn sm danger" id="clearLocal" type="button">Padam data tempatan</button></div>
+    </section>
+  </div>
+
+  <section class="panel">
+    <details id="guide">
+      <summary>Panduan: segerakkan data ke semua peranti (Firebase, percuma)</summary>
+      <p style="margin-top:10px">Laman ini dihoskan di GitHub Pages (fail statik), jadi data tidak boleh dikongsi antara peranti tanpa pangkalan data. Firebase Firestore (percuma) digunakan untuk itu. Panduan penuh dalam bahasa Inggeris: fail <code>README.md</code> dalam repositori GitHub anda.</p>
+      <ol class="steps">
+        <li><b>Cipta projek Firebase</b> — pergi ke <a href="https://console.firebase.google.com" target="_blank" rel="noopener">console.firebase.google.com</a> › <em>Add project</em>. Matikan Google Analytics.</li>
+        <li><b>Daftar apl web</b> — ikon <code>&lt;/&gt;</code> di halaman projek › <em>Register app</em>. Salin nilai <code>firebaseConfig</code> (apiKey, authDomain, projectId, storageBucket, messagingSenderId, appId) ke dalam fail <code>config.js</code>.</li>
+        <li><b>Cipta Firestore</b> — menu <em>Build › Firestore Database › Create database</em>, pilih lokasi <em>asia-southeast1 (Singapore)</em>, mod <em>production</em>. Kemudian tab <em>Rules</em>: tampal kandungan fail <code>firestore.rules</code> dan klik <em>Publish</em>.</li>
+        <li><b>Aktifkan log masuk</b> — <em>Build › Authentication › Get started › Sign-in method › Email/Password › Enable</em>. Tab <em>Users › Add user</em>: cipta e-mel dan kata laluan untuk kaunter.</li>
+        <li><b>Benarkan domain</b> — <em>Authentication › Settings › Authorized domains › Add domain</em>: masukkan domain GitHub Pages anda (cth. <code>namaanda.github.io</code>).</li>
+        <li><b>Muat naik ke GitHub</b> — muat naik semua fail (termasuk <code>config.js</code> yang telah diisi). Buka laman di setiap peranti dan log masuk sekali. Data lama dalam pelayar lama akan dimuat naik secara automatik.</li>
+      </ol>
+      <p style="margin-top:12px">Selepas siap, lencana di penjuru atas harus menunjukkan <b style="color:#fff">Cloud · segerak</b>. Gunakan butang <em>Uji sambungan</em> di atas untuk semak.</p>
+    </details>
+  </section>
+</main>
+
+<script src="config.js"></script>
+<script src="menu-default.js"></script>
+<script src="db.js"></script>
+<script>
+const H = KantinDB.h, { rm, esc, startClock, toast, ymd, fmtTime, csv } = H;
+startClock('today', 'now');
+document.getElementById('brand').textContent = KantinDB.state.shopName;
+const $ = id => document.getElementById(id);
+const st = KantinDB.state;
+
+function renderStatus() {
+  const rows = [];
+  const dot = (cls, txt) => `<i class="dot ${cls}"></i>${esc(txt)}`;
+  if (st.mode === 'local') {
+    rows.push(['Mod', dot(st.configured ? 'err' : 'warn', st.configured ? 'Tempatan (cloud gagal dimuatkan)' : 'Tempatan — data dalam pelayar ini sahaja')]);
+    if (st.configured && st.errorDetail) rows.push(['Ralat', esc(st.errorDetail)]);
+    if (!st.configured) rows.push(['Cloud', 'Belum disediakan — isi <code>config.js</code> (lihat panduan di bawah)']);
+  } else {
+    rows.push(['Mod', dot(st.ready ? 'ok' : 'warn', st.ready ? 'Cloud — dikongsi semua peranti' : 'Menyambung…')]);
+    rows.push(['Projek Firebase', esc(st.project)]);
+    if (st.requireLogin) rows.push(['Log masuk', st.user ? dot('ok', st.user.email) : dot('err', 'Belum log masuk')]);
+    else rows.push(['Log masuk', dot('warn', 'Dimatikan (requireLogin: false)')]);
+    rows.push(['Internet', dot(st.online ? 'ok' : 'warn', st.online ? 'Dalam talian' : 'Luar talian — perubahan disimpan & dihantar kemudian')]);
+    rows.push(['Cache luar talian', dot(st.persistence ? 'ok' : 'warn', st.persistence ? 'Aktif' : 'Tidak aktif (pelayar ini tidak menyokong / tab lain terbuka)')]);
+    rows.push(['Menunggu hantar', st.pending ? dot('warn', st.pending + ' perubahan') : dot('ok', 'Tiada')]);
+    if (st.error && st.error !== 'sdk') rows.push(['Ralat terakhir', dot('err', st.error + (st.errorDetail ? ' — ' + st.errorDetail : ''))]);
+  }
+  $('kv').innerHTML = rows.map(([k, v]) => `<span>${k}</span><b>${v}</b>`).join('');
+  $('logoutBtn').hidden = !(st.mode === 'cloud' && st.requireLogin && st.user);
+  $('loginBox').innerHTML = (st.mode === 'cloud' && st.ready && st.requireLogin && !st.user) ? `
+    <form class="loginform" id="loginForm">
+      <label class="field">E-mel<input class="input" name="email" type="email" autocomplete="username" required></label>
+      <label class="field">Kata laluan<input class="input" name="pass" type="password" autocomplete="current-password" required></label>
+      <div class="msg err" id="loginErr" hidden></div>
+      <button class="btn primary" type="submit">Log masuk</button>
+    </form>` : '';
+  const lf = $('loginForm');
+  if (lf) lf.onsubmit = async e => {
+    e.preventDefault(); const b = lf.querySelector('button'); b.disabled = true;
+    try { await KantinDB.login(lf.email.value, lf.pass.value); toast('Berjaya log masuk', 'ok'); location.reload(); }
+    catch (err) { const m = $('loginErr'); m.hidden = false; m.textContent = KantinDB.authMessage(err); b.disabled = false; }
+  };
+  renderLocalBox();
+}
+function renderLocalBox() {
+  const n = KantinDB.localSalesCount(), pend = KantinDB.pendingLocalCount();
+  let html = `<div class="kv"><span>Transaksi tempatan</span><b>${n} transaksi dalam pelayar ini</b></div>`;
+  if (st.mode === 'cloud' && n) {
+    html += pend
+      ? `<div class="msg">${pend} transaksi lama dalam pelayar ini belum disahkan berada di cloud.<div class="row"><button class="btn sm primary" id="migrateBtn" type="button">Muat naik ke cloud sekarang</button></div></div>`
+      : `<div class="msg ok">Semua transaksi lama pelayar ini telah dimuat naik ke cloud.</div>`;
+  }
+  $('localBox').innerHTML = html;
+  const mb = $('migrateBtn');
+  if (mb) mb.onclick = async () => {
+    mb.disabled = true; mb.textContent = 'Memuat naik…';
+    try { const r = await KantinDB.migrateLocal(); toast(`${r.uploaded} transaksi dimuat naik`, 'ok'); }
+    catch (e) { toast('Gagal: ' + KantinDB.explainError(e), 'err'); }
+    renderLocalBox();
+  };
+}
+KantinDB.onState(renderStatus);
+
+$('deviceName').value = KantinDB.deviceName();
+$('saveDevice').onclick = () => { KantinDB.setDeviceName($('deviceName').value); toast('Nama peranti disimpan', 'ok'); };
+$('reloadBtn').onclick = () => location.reload();
+$('logoutBtn').onclick = async () => { if (await H.confirm({ title: 'Log keluar?', text: 'Anda perlu log masuk semula untuk menggunakan kaunter pada peranti ini.', ok: 'Log keluar' })) { await KantinDB.logout(); location.reload(); } };
+$('testBtn').onclick = async () => {
+  const m = $('testMsg'); m.hidden = false; m.className = 'msg'; m.textContent = 'Menguji…';
+  const r = await KantinDB.testConnection();
+  m.className = 'msg ' + (r.ok ? 'ok' : 'err'); m.textContent = r.message;
+};
+
+/* ---------------- backup / restore */
+$('backupJson').onclick = async () => {
+  try { const data = await KantinDB.exportAll(); KantinDB.downloadFile(`sandaran_kantin_${ymd(new Date())}.json`, JSON.stringify(data, null, 1), 'application/json'); toast(`Sandaran: ${data.sales.length} transaksi`, 'ok'); }
+  catch (e) { toast('Gagal: ' + KantinDB.explainError(e), 'err'); }
+};
+$('backupCsv').onclick = async () => {
+  try {
+    const sales = await KantinDB.getSales({});
+    const rows = [['Tarikh', 'Masa', 'ID', 'Kaedah', 'Item', 'Subtotal (RM)', 'Pelarasan (RM)', 'Nota', 'Jumlah (RM)', 'Diterima (RM)', 'Baki (RM)', 'Peranti']];
+    sales.forEach(s => rows.push([ymd(s.ts), fmtTime(s.ts), s.id, s.method === 'qr' ? 'QR' : 'Tunai', s.items.map(it => `${it.name} x${it.qty}`).join('; '), s.subtotal.toFixed(2), s.adj.toFixed(2), s.note, s.total.toFixed(2), s.paid.toFixed(2), s.change.toFixed(2), s.device]));
+    KantinDB.downloadFile(`semua_transaksi_${ymd(new Date())}.csv`, csv(rows), 'text/csv;charset=utf-8');
+  } catch (e) { toast('Gagal: ' + KantinDB.explainError(e), 'err'); }
+};
+$('restoreBtn').onclick = async () => {
+  const f = $('restoreFile').files[0]; const m = $('restoreMsg');
+  if (!f) { toast('Pilih fail JSON dahulu', 'err'); return; }
+  let data; try { data = JSON.parse(await f.text()); } catch (e) { m.hidden = false; m.className = 'msg err'; m.textContent = 'Fail bukan JSON yang sah.'; return; }
+  const sales = Array.isArray(data.sales) ? data.sales : Array.isArray(data) ? data : null;
+  if (!sales) { m.hidden = false; m.className = 'msg err'; m.textContent = 'Fail ini tidak mengandungi senarai transaksi.'; return; }
+  const withMenu = !!data.menu && await H.confirm({ title: 'Pulihkan menu juga?', text: 'Fail ini mengandungi menu. Gantikan menu semasa dengan menu dari fail?', ok: 'Ya, gantikan menu', cancel: 'Tidak, transaksi sahaja' });
+  if (!await H.confirm({ title: 'Pulihkan data?', text: `${sales.length} transaksi akan ditambah/dikemas kini${withMenu ? ' dan menu akan digantikan' : ''}. Transaksi sedia ada dengan ID sama akan ditulis ganti.`, ok: 'Pulihkan' })) return;
+  try { const r = await KantinDB.importAll({ sales, menu: data.menu }, { menu: withMenu }); m.hidden = false; m.className = 'msg ok'; m.textContent = `${r.sales} transaksi dipulihkan${r.menu ? ', menu digantikan' : ''}.`; renderLocalBox(); }
+  catch (e) { m.hidden = false; m.className = 'msg err'; m.textContent = 'Gagal: ' + KantinDB.explainError(e); }
+};
+$('resetMenu').onclick = async () => {
+  if (!await H.confirm({ title: 'Tetapkan semula menu?', text: 'Menu semasa (termasuk item dan harga yang anda ubah) akan digantikan dengan senarai dalam menu-default.js.', ok: 'Tetapkan semula', danger: true })) return;
+  await KantinDB.resetMenuToDefault(); toast('Menu ditetapkan semula', 'ok');
+};
+$('clearLocal').onclick = async () => {
+  if (!await H.confirm({ title: 'Padam data tempatan?', text: 'Semua transaksi dan menu yang disimpan dalam pelayar ini akan dipadam. Data cloud tidak terjejas.', ok: 'Padam', danger: true })) return;
+  KantinDB.clearLocal(); toast('Data tempatan dipadam', 'ok'); renderLocalBox();
+};
+
+KantinDB.ready({ loginOverlay: false }).then(() => { renderStatus(); if (!st.configured) $('guide').open = true; });
+renderStatus();
+</script>
+</body>
+</html>
