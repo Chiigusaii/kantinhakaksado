@@ -3,138 +3,58 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Data Jualan — Kantin Dapo Hakaksado</title>
+<title>Laporan Jualan — Kantin Dapo Hakaksado</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="app.css" />
 <style>
-  :root{
-    --bg:#272833; --rail:#1F2029; --panel:#31333F; --panel-2:#3A3D4B;
-    --line:rgba(255,255,255,.08); --text:#F4F4F7; --muted:#A5A7B5; --ink:#272833;
-    --orange:#EB5A0F; --orange-2:#F58A3C; --green:#3ECF8E; --red:#F0625C;
-    --teal:#63B5B8; --teal-2:#8AD3CD; --blue:#4A95C9;
-    color-scheme:dark;
-  }
-  *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:"Manrope","Segoe UI",system-ui,-apple-system,Roboto,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-weight:500;-webkit-font-smoothing:antialiased}
-  button{font-family:inherit;cursor:pointer;border:none;color:inherit}
-  :focus-visible{outline:2px solid var(--orange-2);outline-offset:3px}
-
-  /* ---------- left rail ---------- */
-  .rail{position:fixed;left:0;top:0;bottom:0;width:84px;background:var(--rail);border-right:1px solid var(--line);display:flex;flex-direction:column;align-items:center;padding:18px 0;z-index:60}
-  .rail .back{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;color:var(--muted);text-decoration:none;transition:background .2s,color .2s}
-  .rail .back:hover{color:#fff;background:rgba(255,255,255,.06)}
-  .rail .back svg{width:22px;height:22px}
-  .rail nav{display:flex;flex-direction:column;gap:10px;margin:auto 0}
-  .nav{width:60px;padding:9px 0 7px;border-radius:14px;display:flex;flex-direction:column;align-items:center;gap:5px;color:var(--muted);text-decoration:none;font-size:.62rem;font-weight:700;transition:background .2s,color .2s}
-  .rail svg{stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-  .nav svg{width:22px;height:22px}
-  .nav:hover{background:rgba(255,255,255,.06);color:#fff}
-  .nav.active{background:var(--orange);color:#fff;box-shadow:0 8px 18px rgba(235,90,15,.35)}
-
-  /* ---------- page ---------- */
-  main{margin-left:84px;padding:26px 30px 48px;max-width:1320px}
-  .head{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:18px}
-  .brand{font-size:.8rem;font-weight:700;color:var(--muted);margin-bottom:2px}
-  h1{font-size:1.75rem;font-weight:500;letter-spacing:-.01em;line-height:1.15}
-  h1 b{font-weight:800}
-  .headr{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-  .period{font-size:.84rem;font-weight:700;color:var(--muted)}
-  .clock{display:inline-flex;align-items:center;gap:12px;background:rgba(255,255,255,.06);border:1px solid var(--line);border-radius:999px;padding:8px 16px;font-size:.84rem;color:var(--muted);font-variant-numeric:tabular-nums}
-  .clock b{color:#fff;font-size:1rem;font-weight:800}
-
-  /* ---------- period selector ---------- */
-  .periods{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:20px}
-  .pbtn{padding:10px 18px;border-radius:999px;background:rgba(255,255,255,.06);color:var(--text);font-weight:700;font-size:.84rem;transition:background .2s,color .2s}
-  .pbtn:hover{background:rgba(255,255,255,.12)}
-  .pbtn.active{background:var(--orange);color:#fff;box-shadow:0 8px 18px rgba(235,90,15,.3)}
-  .dateRow{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-left:auto;font-size:.82rem;color:var(--muted);font-weight:700}
-  .dateRow input{padding:9px 12px;border:1px solid var(--line);background:var(--panel);color:#fff;border-radius:12px;font:inherit}
-  .dateRow input:focus{outline:none;border-color:var(--orange-2)}
-
-  /* ---------- KPI cards ---------- */
-  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:16px;margin-bottom:20px}
-  .kpi{
-    position:relative;isolation:isolate;border-radius:22px;padding:20px 20px 18px;min-height:150px;
-    display:flex;flex-direction:column;justify-content:flex-end;color:#fff;overflow:hidden;
-    background:linear-gradient(160deg,var(--c1),var(--c2));box-shadow:0 14px 30px rgba(0,0,0,.28);
-    animation:rise .5s cubic-bezier(.2,.8,.2,1) backwards
-  }
-  .kpi:nth-child(2){animation-delay:.05s}.kpi:nth-child(3){animation-delay:.1s}.kpi:nth-child(4){animation-delay:.15s}.kpi:nth-child(5){animation-delay:.2s}
-  @keyframes rise{from{opacity:0;transform:translateY(14px)}}
-  .kpi::before{content:"";position:absolute;inset:0;z-index:-1;background:radial-gradient(circle at 82% 18%,rgba(255,255,255,.3),transparent 45%)}
-  .kpi .ic{position:absolute;right:16px;top:14px;font-size:2rem;line-height:1;filter:drop-shadow(0 8px 10px rgba(0,0,0,.25))}
-  .kpi .l{font-size:.78rem;font-weight:700;opacity:.92}
-  .kpi .v{font-size:1.7rem;font-weight:800;margin-top:4px;font-variant-numeric:tabular-nums;line-height:1.1;text-shadow:0 1px 2px rgba(0,0,0,.12)}
-  .kpi .s{font-size:.76rem;opacity:.85;margin-top:4px}
-  .kpi.sky{color:var(--ink)} .kpi.sky .v{text-shadow:none}
-
-  /* ---------- panels ---------- */
-  .panel{background:var(--panel);border:1px solid var(--line);border-radius:22px;margin-bottom:18px;overflow:hidden}
-  .panel-head{padding:16px 20px;font-weight:800;font-size:.95rem;display:flex;gap:10px;flex-wrap:wrap;align-items:center;border-bottom:1px solid var(--line)}
-  .panel-head .hint{margin-left:auto;font-size:.76rem;color:var(--muted);font-weight:700}
-
-  /* chart */
-  .chart{display:flex;align-items:flex-end;gap:6px;height:240px;padding:26px 18px 8px;overflow-x:auto}
-  .bar{flex:1;min-width:26px;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;height:100%;gap:6px}
-  .bar .fill{width:100%;border-radius:8px 8px 4px 4px;background:linear-gradient(180deg,var(--orange-2),var(--orange));height:0;transition:height .8s cubic-bezier(.2,.9,.3,1);position:relative;min-height:3px}
-  .bar .fill:hover{filter:brightness(1.12)}
-  .bar .fill::after{content:attr(data-v);position:absolute;top:-22px;left:50%;transform:translateX(-50%);font-size:.7rem;font-weight:800;color:#fff;white-space:nowrap;opacity:0;transition:.2s}
-  .bar:hover .fill::after{opacity:1}
-  .bar .lb{font-size:.68rem;color:var(--muted);font-weight:700;text-align:center;white-space:nowrap}
-  .bar.peak .fill{background:linear-gradient(180deg,var(--teal-2),var(--teal))}
-
-  /* tables */
-  table{width:100%;border-collapse:collapse;font-size:.86rem}
-  th{background:var(--panel-2);color:var(--muted);text-align:left;padding:11px 16px;font-size:.74rem;font-weight:700;position:sticky;top:0;z-index:1}
-  td{padding:11px 16px;border-bottom:1px solid var(--line)}
-  td:first-child{white-space:nowrap}
-  tbody tr{transition:background .15s}
-  tbody tr:hover{background:rgba(255,255,255,.04)}
-  .r{text-align:right;font-variant-numeric:tabular-nums;font-weight:700}
-  .scroll{max-height:420px;overflow:auto}
-  .items-cell{color:var(--muted);font-size:.8rem}
-  .empty{padding:40px;text-align:center;color:var(--muted);line-height:1.5}
-  .empty span{display:block;font-size:2.4rem;margin-bottom:10px}
-
-  .btn{padding:10px 16px;border-radius:12px;font-weight:800;font-size:.84rem;transition:filter .15s}
-  .btn:hover{filter:brightness(1.08)}
-  .btn-csv{background:var(--teal);color:#0F2A29}
-  .btn-print{background:var(--blue);color:#fff}
-  .btn-del{background:transparent;color:var(--red);border:1px solid var(--red)}
-  .btn-del:hover{background:var(--red);color:#fff}
-  .toolbar{display:flex;gap:10px;flex-wrap:wrap;padding:14px 18px;border-top:1px solid var(--line)}
-  .toolbar .spacer{flex:1}
-  .note{font-size:.78rem;color:var(--muted);padding:0 18px 16px}
-
-  @media print{
-    :root{color-scheme:light}
-    body{background:#fff;color:#000}
-    .rail,.toolbar,.periods,.clock{display:none}
-    main{margin:0;padding:0;max-width:none}
-    .panel{background:#fff;border:1px solid #bbb;box-shadow:none;break-inside:avoid;color:#000}
-    .panel-head{border-color:#bbb}
-    .kpi{color:#000;background:#eee;box-shadow:none;animation:none}
-    .kpi.sky{color:#000}
-    th{background:#eee;color:#000}
-    td{border-color:#ddd}
-    .bar .lb,.note,.brand,.period,.hint,.items-cell,.empty{color:#333}
-  }
-  @media (max-width:720px){
-    .rail{top:auto;right:0;bottom:0;width:auto;height:68px;flex-direction:row;justify-content:space-around;padding:0 8px;border-right:0;border-top:1px solid var(--line)}
-    .rail .back{display:none}
-    .rail nav{flex-direction:row;margin:0;gap:4px}
-    main{margin-left:0;padding:22px 14px 96px}
-    .dateRow{margin-left:0}
-  }
-  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+  .periods{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:10px}
+  .range{display:none;gap:8px;align-items:center;flex-wrap:wrap}
+  .range.show{display:flex}
+  .range .input{width:auto}
+  .range-label{color:var(--muted);font-size:.84rem;font-weight:700;margin:6px 0 18px}
+  .stats{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:18px}
+  .stat{background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:16px;padding:14px 16px}
+  .stat .label{font-size:.74rem;color:var(--muted);font-weight:700}
+  .stat .value{font-size:1.25rem;font-weight:800;margin-top:4px;font-variant-numeric:tabular-nums}
+  .stat .sub{font-size:.72rem;color:var(--muted);margin-top:2px}
+  .stat.cash .value{color:#ffb58a}
+  .stat.qr .value{color:#d6cdff}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+  .bars{display:flex;flex-direction:column;gap:8px}
+  .bar{display:grid;grid-template-columns:112px 1fr 92px;gap:10px;align-items:center;font-size:.8rem;font-weight:700;color:var(--muted)}
+  .bar .track{height:14px;background:rgba(255,255,255,.06);border-radius:999px;overflow:hidden;display:flex}
+  .bar .c{background:var(--orange);height:100%}
+  .bar .q{background:var(--purple);height:100%}
+  .bar .amt{text-align:right;font-weight:800;color:#fff;font-variant-numeric:tabular-nums}
+  .legend{display:flex;gap:14px;font-size:.74rem;color:var(--muted);font-weight:700;margin-top:12px}
+  .legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+  table{width:100%;border-collapse:collapse;font-size:.84rem}
+  th{text-align:left;color:var(--muted);font-size:.72rem;font-weight:800;padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+  td{padding:10px;border-bottom:1px solid var(--line);vertical-align:top}
+  td.r,th.r{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+  td.n{white-space:nowrap}
+  tr.tx{cursor:pointer}
+  tr.tx:hover td{background:rgba(255,255,255,.04)}
+  .items-cell{color:var(--muted);line-height:1.45}
+  .items-cell .tag{margin-left:6px}
+  .toolbar{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+  .tbl-wrap{overflow:auto}
+  .more{display:flex;justify-content:center;padding:14px 0 4px}
+  .dl{display:flex;flex-direction:column;gap:6px;margin:12px 0;font-size:.86rem}
+  .dl div{display:flex;justify-content:space-between;gap:14px}
+  .dl div span:first-child{color:var(--muted)}
+  .dl div b{font-variant-numeric:tabular-nums}
+  .dl .sep{border-top:1px solid var(--line);margin:4px 0}
+  small.d{display:block;color:var(--muted);font-weight:700;font-size:.7rem}
+  @media (max-width:1100px){ .stats{grid-template-columns:repeat(3,1fr)} }
+  @media (max-width:900px){ .two{grid-template-columns:1fr} }
+  @media (max-width:720px){ .stats{grid-template-columns:repeat(2,1fr);gap:10px} .bar{grid-template-columns:90px 1fr 80px} .hide-m{display:none} }
 </style>
 </head>
 <body>
 <aside class="rail" aria-label="Navigasi">
-  <a class="back" href="index.html" aria-label="Kembali ke Utama">
-    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
-  </a>
   <nav>
     <a class="nav" href="index.html">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg>Utama</a>
@@ -142,266 +62,235 @@
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6"/></svg>Kaunter</a>
     <a class="nav active" aria-current="page" href="salesdata.html">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>Laporan</a>
-    <a class="nav" href="foodmenu.html#senarai">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><circle cx="7" cy="7" r="1"/></svg>Harga</a>
+    <a class="nav" href="menu.html">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><circle cx="7" cy="7" r="1"/></svg>Menu</a>
+    <a class="nav" href="settings.html">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Tetapan</a>
   </nav>
 </aside>
 
 <main>
   <div class="head">
     <div>
-      <div class="brand">Kantin Dapo Hakaksado</div>
-      <h1><b>Data</b> Jualan</h1>
+      <div class="brand" id="brand">Kantin Dapo Hakaksado</div>
+      <h1><b>Laporan</b> Jualan</h1>
     </div>
-    <div class="headr">
-      <span class="period" id="periodLabel"></span>
-      <div class="clock"><b id="clock">--:--:--</b></div>
-    </div>
-  </div>
-
-  <!-- PERIOD -->
-  <div class="periods" id="periods">
-    <button class="pbtn active" data-p="day">Hari Ini</button>
-    <button class="pbtn" data-p="week">Minggu Ini</button>
-    <button class="pbtn" data-p="month">Bulan Ini</button>
-    <button class="pbtn" data-p="year">Tahun Ini</button>
-    <button class="pbtn" data-p="all">Semua Rekod</button>
-    <div class="dateRow">
-      <label for="pickDate">Tarikh tertentu</label>
-      <input type="date" id="pickDate" />
-      <button class="btn btn-print" id="goDate">Lihat hari itu</button>
+    <div class="head-right">
+      <a id="syncBadge" class="sync" href="settings.html"><i></i>Memuatkan…</a>
+      <div class="clock"><span id="today">—</span><b id="now">--:--:--</b></div>
     </div>
   </div>
 
-  <!-- KPI -->
-  <section class="kpis" aria-label="Ringkasan jualan">
-    <div class="kpi" style="--c1:#f79a3f;--c2:#e8560a"><span class="ic" aria-hidden="true">💰</span><div class="l">Jumlah jualan</div><div class="v" id="kTotal">RM0.00</div><div class="s" id="kPeriod">—</div></div>
-    <div class="kpi" style="--c1:#ef7aa0;--c2:#d7548a"><span class="ic" aria-hidden="true">🧾</span><div class="l">Bilangan transaksi</div><div class="v" id="kTx">0</div><div class="s">resit dikeluarkan</div></div>
-    <div class="kpi sky" style="--c1:#c4d0de;--c2:#a3b4c8"><span class="ic" aria-hidden="true">🍽️</span><div class="l">Purata setiap resit</div><div class="v" id="kAvg">RM0.00</div><div class="s">jualan / transaksi</div></div>
-    <div class="kpi" style="--c1:#8ad3cd;--c2:#4fa3a8"><span class="ic" aria-hidden="true">📦</span><div class="l">Item terjual</div><div class="v" id="kItems">0</div><div class="s">unit keseluruhan</div></div>
-    <div class="kpi" style="--c1:#b6abe6;--c2:#7f6fcb"><span class="ic" aria-hidden="true">⏰</span><div class="l">Waktu paling sibuk</div><div class="v" id="kPeak">—</div><div class="s" id="kPeakAmt">berdasarkan masa sebenar</div></div>
+  <div class="periods">
+    <div class="chips" id="periods">
+      <button class="chip" data-p="day">Hari ini</button>
+      <button class="chip" data-p="yesterday">Semalam</button>
+      <button class="chip" data-p="week">Minggu ini</button>
+      <button class="chip" data-p="month">Bulan ini</button>
+      <button class="chip" data-p="lastmonth">Bulan lepas</button>
+      <button class="chip" data-p="custom">Pilih tarikh</button>
+    </div>
+    <div class="range" id="range">
+      <input class="input" type="date" id="from" aria-label="Dari">
+      <span class="muted">hingga</span>
+      <input class="input" type="date" id="to" aria-label="Hingga">
+      <button class="btn sm primary" id="applyRange" type="button">Papar</button>
+    </div>
+  </div>
+  <div class="range-label" id="rangeLabel">—</div>
+
+  <section class="stats" aria-label="Ringkasan">
+    <div class="stat"><div class="label">Jumlah jualan</div><div class="value" id="vTotal">RM0.00</div><div class="sub" id="vCount">0 transaksi</div></div>
+    <div class="stat cash"><div class="label">Tunai</div><div class="value" id="vCash">RM0.00</div><div class="sub" id="vCashN">0 transaksi</div></div>
+    <div class="stat qr"><div class="label">QR Pay</div><div class="value" id="vQr">RM0.00</div><div class="sub" id="vQrN">0 transaksi</div></div>
+    <div class="stat"><div class="label">Purata setiap transaksi</div><div class="value" id="vAvg">RM0.00</div><div class="sub" id="vItems">0 item terjual</div></div>
+    <div class="stat"><div class="label">Pelarasan harga</div><div class="value" id="vAdj">RM0.00</div><div class="sub" id="vAdjN">0 transaksi diubah</div></div>
+    <div class="stat"><div class="label">Jualan tertinggi</div><div class="value" id="vMax">RM0.00</div><div class="sub" id="vMaxSub">—</div></div>
   </section>
 
-  <!-- CHART -->
-  <div class="panel">
-    <div class="panel-head">Graf jualan <span id="chartTitle" class="hint"></span></div>
-    <div class="chart" id="chart"></div>
-    <div class="note">Hover pada bar untuk lihat jumlah. Bar hijau kebiruan ialah tempoh jualan tertinggi.</div>
+  <div class="two">
+    <section class="panel" id="dailyPanel">
+      <h2>Jualan mengikut hari</h2>
+      <div class="bars" id="daily"></div>
+      <div class="legend"><span><i style="background:var(--orange)"></i>Tunai</span><span><i style="background:var(--purple)"></i>QR Pay</span></div>
+    </section>
+    <section class="panel">
+      <h2>Item terlaris <small>mengikut kuantiti</small></h2>
+      <div class="tbl-wrap"><table><thead><tr><th>Item</th><th class="r">Kuantiti</th><th class="r">Jualan</th></tr></thead><tbody id="top"></tbody></table></div>
+    </section>
   </div>
 
-  <!-- TOP ITEMS -->
-  <div class="panel">
-    <div class="panel-head">Menu paling laris</div>
-    <div class="scroll">
-      <table><thead><tr><th>#</th><th>Menu</th><th class="r">Kuantiti</th><th class="r">Jumlah (RM)</th></tr></thead>
-      <tbody id="topBody"></tbody></table>
-    </div>
-  </div>
-
-  <!-- TRANSACTIONS -->
-  <div class="panel">
-    <div class="panel-head">Senarai transaksi <span class="hint">masa sebenar</span></div>
-    <div class="scroll">
-      <table><thead><tr><th>No. Resit</th><th>Tarikh</th><th>Masa</th><th>Item</th><th class="r">Jumlah</th><th class="r">Tunai</th><th class="r">Baki</th></tr></thead>
-      <tbody id="txBody"></tbody></table>
-    </div>
+  <section class="panel">
     <div class="toolbar">
-      <button class="btn btn-csv" id="csvPeriod">Muat turun CSV (tempoh ini)</button>
-      <button class="btn btn-csv" id="csvAll">Backup semua data (CSV)</button>
-      <button class="btn btn-print" id="printBtn">Cetak laporan</button>
-      <div class="spacer"></div>
-      <button class="btn btn-del" id="wipe">Kosongkan semua data</button>
+      <h2 style="margin:0">Transaksi <small id="txCount"></small></h2>
+      <div class="row">
+        <button class="btn sm" id="csvTx" type="button">Muat turun CSV</button>
+        <button class="btn sm" id="csvItems" type="button">CSV mengikut item</button>
+      </div>
     </div>
-    <div class="note">Data disimpan dalam pelayar ini sahaja (localStorage). Buat backup CSV setiap hujung hari supaya rekod selamat.</div>
-  </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Masa</th><th>Item</th><th>Kaedah</th><th class="r">Jumlah</th></tr></thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+    <div class="more" id="more"></div>
+  </section>
 </main>
 
+<script src="config.js"></script>
+<script src="menu-default.js"></script>
+<script src="db.js"></script>
 <script>
-const KEY='hakaksado_sales_v1';
-const $=id=>document.getElementById(id);
-const rm=n=>'RM'+Number(n||0).toFixed(2);
-const MONTHS=['Jan','Feb','Mac','Apr','Mei','Jun','Jul','Ogo','Sep','Okt','Nov','Dis'];
-const MONTHS_FULL=['Januari','Februari','Mac','April','Mei','Jun','Julai','Ogos','September','Oktober','November','Disember'];
-const DAYS=['Ahad','Isnin','Selasa','Rabu','Khamis','Jumaat','Sabtu'];
-let mode='day', pickedDate=null;
+const H = KantinDB.h, { rm, money, esc, startClock, startOfDay, fmtDate, fmtShort, fmtTime, ymd, MONTHS, DAYS, toast, csv } = H;
+startClock('today', 'now');
+document.getElementById('brand').textContent = KantinDB.state.shopName;
+const $ = id => document.getElementById(id);
+const params = new URLSearchParams(location.search);
+const PERIODS = ['day', 'yesterday', 'week', 'month', 'lastmonth', 'custom'];
+let period = PERIODS.includes(params.get('p')) ? params.get('p') : 'day';
+const todayStr = ymd(new Date());
+$('from').value = params.get('from') || todayStr; $('to').value = params.get('to') || todayStr;
+let sales = [], unsub = null, shown = 100, cur = null;
 
-/* tempoh dari halaman Utama: salesdata.html?p=week */
-const qp=new URLSearchParams(location.search).get('p');
-if(['day','week','month','year','all'].includes(qp)) mode=qp;
-document.querySelectorAll('.pbtn').forEach(x=>x.classList.toggle('active',x.dataset.p===mode));
-
-const load=()=>{try{return (JSON.parse(localStorage.getItem(KEY))||[]).sort((a,b)=>new Date(a.ts)-new Date(b.ts))}catch(e){return[]}};
-setInterval(()=>{$('clock').textContent=new Date().toLocaleTimeString('en-GB')},1000);
-$('clock').textContent=new Date().toLocaleTimeString('en-GB');
-
-function range(){
-  const now=new Date();
-  if(pickedDate){
-    const s=new Date(pickedDate+'T00:00:00'), e=new Date(s); e.setDate(s.getDate()+1);
-    return {s,e,label:`${DAYS[s.getDay()]}, ${s.getDate()} ${MONTHS_FULL[s.getMonth()]} ${s.getFullYear()}`,grain:'hour'};
-  }
-  if(mode==='day'){
-    const s=new Date(now.getFullYear(),now.getMonth(),now.getDate()), e=new Date(s); e.setDate(s.getDate()+1);
-    return {s,e,label:`Hari Ini — ${DAYS[s.getDay()]}, ${s.getDate()} ${MONTHS_FULL[s.getMonth()]} ${s.getFullYear()}`,grain:'hour'};
-  }
-  if(mode==='week'){
-    const d=new Date(now.getFullYear(),now.getMonth(),now.getDate());
-    const s=new Date(d); s.setDate(d.getDate()-((now.getDay()+6)%7));
-    const e=new Date(s); e.setDate(s.getDate()+7);
-    const last=new Date(e); last.setDate(e.getDate()-1);
-    return {s,e,label:`Minggu Ini — ${s.getDate()} ${MONTHS[s.getMonth()]} hingga ${last.getDate()} ${MONTHS[last.getMonth()]} ${last.getFullYear()}`,grain:'day'};
-  }
-  if(mode==='month'){
-    const s=new Date(now.getFullYear(),now.getMonth(),1), e=new Date(now.getFullYear(),now.getMonth()+1,1);
-    return {s,e,label:`Bulan ${MONTHS_FULL[now.getMonth()]} ${now.getFullYear()}`,grain:'day'};
-  }
-  if(mode==='year'){
-    const s=new Date(now.getFullYear(),0,1), e=new Date(now.getFullYear()+1,0,1);
-    return {s,e,label:`Tahun ${now.getFullYear()}`,grain:'month'};
-  }
-  return {s:new Date(0),e:new Date(8.64e15),label:'Semua Rekod',grain:'month'};
-}
-
-function render(){
-  const sales=load(), {s,e,label,grain}=range();
-  const rows=sales.filter(x=>{const t=new Date(x.ts);return t>=s&&t<e});
-  $('periodLabel').textContent=label;
-  $('kPeriod').textContent=label;
-  $('chartTitle').textContent=grain==='hour'?'ikut jam':grain==='day'?'ikut hari':'ikut bulan';
-
-  const total=rows.reduce((a,x)=>a+x.total,0);
-  const units=rows.reduce((a,x)=>a+x.items.reduce((b,i)=>b+i.qty,0),0);
-  $('kTotal').textContent=rm(total);
-  $('kTx').textContent=rows.length;
-  $('kAvg').textContent=rm(rows.length?total/rows.length:0);
-  $('kItems').textContent=units;
-
-  /* peak hour by real timestamp */
-  const byHour={};
-  rows.forEach(x=>{const h=new Date(x.ts).getHours();byHour[h]=(byHour[h]||0)+x.total});
-  const peakH=Object.keys(byHour).sort((a,b)=>byHour[b]-byHour[a])[0];
-  $('kPeak').textContent=peakH!==undefined?`${String(peakH).padStart(2,'0')}:00`:'—';
-  $('kPeakAmt').textContent=peakH!==undefined?rm(byHour[peakH])+' pada jam itu':'belum ada jualan';
-
-  /* ---- chart buckets ---- */
-  let buckets=[];
-  if(grain==='hour'){
-    for(let h=7;h<=16;h++) buckets.push({lb:String(h).padStart(2,'0'),v:0});
-    rows.forEach(x=>{
-      const h=new Date(x.ts).getHours(), i=h-7;
-      if(i>=0&&i<buckets.length) buckets[i].v+=x.total;
-      else{ // outside operating hours: append
-        let b=buckets.find(k=>k.lb===String(h).padStart(2,'0'));
-        if(!b){b={lb:String(h).padStart(2,'0'),v:0};buckets.push(b)}
-        b.v+=x.total;
-      }
-    });
-    buckets.sort((a,b)=>a.lb.localeCompare(b.lb));
-  }else if(grain==='day'){
-    const cur=new Date(s);
-    while(cur<e && cur<=new Date()){
-      buckets.push({lb:mode==='week'?DAYS[cur.getDay()].slice(0,3):String(cur.getDate()),key:cur.toDateString(),v:0});
-      cur.setDate(cur.getDate()+1);
+const addDays = (d, n) => { const x = new Date(d); x.setDate(x.getDate() + n); return x; };
+function range() {
+  const now = new Date(), d0 = startOfDay(now);
+  switch (period) {
+    case 'yesterday': { const y = addDays(d0, -1); return { from: +y, to: +d0, label: fmtDate(y) }; }
+    case 'week': { const s = addDays(d0, -((now.getDay() + 6) % 7)); return { from: +s, to: +addDays(s, 7), label: `${fmtShort(s)} – ${fmtShort(addDays(s, 6))}` }; }
+    case 'month': { const s = new Date(now.getFullYear(), now.getMonth(), 1); return { from: +s, to: +new Date(now.getFullYear(), now.getMonth() + 1, 1), label: MONTHS[s.getMonth()] + ' ' + s.getFullYear() }; }
+    case 'lastmonth': { const s = new Date(now.getFullYear(), now.getMonth() - 1, 1); return { from: +s, to: +new Date(now.getFullYear(), now.getMonth(), 1), label: MONTHS[s.getMonth()] + ' ' + s.getFullYear() }; }
+    case 'custom': {
+      let s = new Date($('from').value + 'T00:00:00'), e = new Date($('to').value + 'T00:00:00');
+      if (isNaN(s)) s = d0; if (isNaN(e)) e = s; if (e < s) e = s;
+      return { from: +s, to: +addDays(e, 1), label: ymd(s) === ymd(e) ? fmtDate(s) : `${fmtShort(s)} – ${fmtShort(e)}` };
     }
-    rows.forEach(x=>{const k=new Date(x.ts).toDateString();const b=buckets.find(z=>z.key===k);if(b)b.v+=x.total});
-  }else{
-    const yrs=[...new Set(rows.map(x=>new Date(x.ts).getFullYear()))];
-    if(mode==='year'||yrs.length<=1){
-      for(let m=0;m<12;m++) buckets.push({lb:MONTHS[m],key:m,v:0});
-      rows.forEach(x=>{buckets[new Date(x.ts).getMonth()].v+=x.total});
-    }else{
-      yrs.sort().forEach(y=>buckets.push({lb:String(y),key:y,v:0}));
-      rows.forEach(x=>{const y=new Date(x.ts).getFullYear();buckets.find(b=>b.key===y).v+=x.total});
-    }
+    default: return { from: +d0, to: +addDays(d0, 1), label: fmtDate(d0) };
   }
-  const max=Math.max(...buckets.map(b=>b.v),1);
-  $('chart').innerHTML=buckets.map(b=>`
-    <div class="bar${b.v===max&&b.v>0?' peak':''}">
-      <div class="fill" data-v="${rm(b.v)}" data-h="${(b.v/max*100).toFixed(1)}"></div>
-      <div class="lb">${b.lb}</div>
-    </div>`).join('');
-  requestAnimationFrame(()=>document.querySelectorAll('.fill').forEach(f=>{f.style.height=f.dataset.h+'%'}));
+}
+function setPeriod(p) {
+  period = p;
+  document.querySelectorAll('#periods .chip').forEach(c => c.classList.toggle('active', c.dataset.p === p));
+  $('range').classList.toggle('show', p === 'custom');
+  const u = new URL(location); u.searchParams.set('p', p);
+  if (p === 'custom') { u.searchParams.set('from', $('from').value); u.searchParams.set('to', $('to').value); } else { u.searchParams.delete('from'); u.searchParams.delete('to'); }
+  history.replaceState(null, '', u);
+  subscribe();
+}
+function subscribe() {
+  if (unsub) unsub();
+  cur = range(); shown = 100;
+  $('rangeLabel').textContent = cur.label;
+  unsub = KantinDB.watchSales({ from: cur.from, to: cur.to }, list => { sales = list.slice().sort((a, b) => b.ts - a.ts); renderAll(); });
+}
+$('periods').addEventListener('click', e => { const b = e.target.closest('[data-p]'); if (b) setPeriod(b.dataset.p); });
+$('applyRange').addEventListener('click', () => setPeriod('custom'));
 
-  /* ---- top items ---- */
-  const agg={};
-  rows.forEach(x=>x.items.forEach(i=>{
-    agg[i.name]=agg[i.name]||{qty:0,amt:0};
-    agg[i.name].qty+=i.qty; agg[i.name].amt+=i.qty*i.price;
-  }));
-  const top=Object.entries(agg).sort((a,b)=>b[1].qty-a[1].qty);
-  $('topBody').innerHTML=top.length
-    ? top.map(([n,d],i)=>`<tr><td>${i+1}</td><td>${n}</td><td class="r">${d.qty}</td><td class="r">${d.amt.toFixed(2)}</td></tr>`).join('')
-    : `<tr><td colspan="4" class="empty"><span>🍽️</span>Tiada jualan dalam tempoh ini.</td></tr>`;
+const sum = (arr, f) => money(arr.reduce((a, s) => a + f(s), 0));
+const multiDay = () => cur && (cur.to - cur.from) > 86400000 + 1;
+function renderAll() {
+  const cash = sales.filter(s => s.method !== 'qr'), qr = sales.filter(s => s.method === 'qr');
+  const total = sum(sales, s => s.total);
+  $('vTotal').textContent = rm(total); $('vCount').textContent = sales.length + ' transaksi';
+  $('vCash').textContent = rm(sum(cash, s => s.total)); $('vCashN').textContent = cash.length + ' transaksi';
+  $('vQr').textContent = rm(sum(qr, s => s.total)); $('vQrN').textContent = qr.length + ' transaksi';
+  $('vAvg').textContent = rm(sales.length ? total / sales.length : 0);
+  $('vItems').textContent = sales.reduce((a, s) => a + s.items.reduce((x, it) => x + it.qty, 0), 0) + ' item terjual';
+  const adjusted = sales.filter(s => Math.abs(s.adj) > 0.001);
+  $('vAdj').textContent = rm(sum(adjusted, s => s.adj)).replace('RM-', '−RM'); $('vAdjN').textContent = adjusted.length + ' transaksi diubah';
+  const max = sales.reduce((m, s) => (!m || s.total > m.total ? s : m), null);
+  $('vMax').textContent = rm(max ? max.total : 0); $('vMaxSub').textContent = max ? (multiDay() ? fmtShort(max.ts) + ' ' : '') + fmtTime(max.ts) + (max.method === 'qr' ? ' · QR' : ' · Tunai') : '—';
 
-  /* ---- transactions ---- */
-  $('txBody').innerHTML=rows.length
-    ? [...rows].reverse().map(x=>{
-        const t=new Date(x.ts);
-        const items=x.items.map(i=>`${i.qty}× ${i.name}`).join(', ');
-        return `<tr>
-          <td><b>${x.id}</b></td>
-          <td>${t.toLocaleDateString('en-GB')}</td>
-          <td><b>${t.toLocaleTimeString('en-GB')}</b></td>
-          <td class="items-cell">${items}</td>
-          <td class="r">${rm(x.total)}</td>
-          <td class="r">${rm(x.paid)}</td>
-          <td class="r">${rm(x.change)}</td></tr>`;
-      }).join('')
-    : `<tr><td colspan="7" class="empty"><span>🧾</span>Belum ada transaksi. Buka <b>Kaunter</b> untuk mula merekod jualan.</td></tr>`;
+  // daily
+  const days = {};
+  sales.forEach(s => { const k = ymd(s.ts); const d = days[k] || (days[k] = { c: 0, q: 0, n: 0, ts: s.ts }); d[s.method === 'qr' ? 'q' : 'c'] += s.total; d.n++; });
+  const keys = Object.keys(days).sort();
+  const maxDay = Math.max(1, ...keys.map(k => days[k].c + days[k].q));
+  $('dailyPanel').querySelector('h2').textContent = multiDay() ? 'Jualan mengikut hari' : 'Jualan mengikut jam';
+  if (!multiDay()) {           // single day → hourly bars
+    const hours = {};
+    sales.forEach(s => { const h = new Date(s.ts).getHours(); const d = hours[h] || (hours[h] = { c: 0, q: 0, n: 0 }); d[s.method === 'qr' ? 'q' : 'c'] += s.total; d.n++; });
+    const hk = Object.keys(hours).map(Number).sort((a, b) => a - b), mh = Math.max(1, ...hk.map(h => hours[h].c + hours[h].q));
+    $('daily').innerHTML = hk.length ? hk.map(h => bar(`${String(h).padStart(2, '0')}:00–${String(h + 1).padStart(2, '0')}:00`, hours[h], mh)).join('') : `<div class="empty"><b>Tiada jualan</b>Tiada transaksi dalam tempoh ini.</div>`;
+  } else {
+    $('daily').innerHTML = keys.length ? keys.map(k => { const d = new Date(days[k].ts); return bar(`${DAYS[d.getDay()].slice(0, 3)} ${d.getDate()} ${MONTHS[d.getMonth()].slice(0, 3)}`, days[k], maxDay); }).join('') : `<div class="empty"><b>Tiada jualan</b>Tiada transaksi dalam tempoh ini.</div>`;
+  }
 
-  return rows;
+  // top items
+  const agg = {};
+  sales.forEach(s => s.items.forEach(it => { const a = agg[it.name] || (agg[it.name] = { qty: 0, amt: 0 }); a.qty += it.qty; a.amt += it.price * it.qty; }));
+  const top = Object.entries(agg).sort((a, b) => b[1].qty - a[1].qty).slice(0, 10);
+  $('top').innerHTML = top.length ? top.map(([n, a]) => `<tr><td>${esc(n)}</td><td class="r">${a.qty}</td><td class="r">${rm(a.amt)}</td></tr>`).join('') : `<tr><td colspan="3" class="empty">Tiada data lagi.</td></tr>`;
+
+  renderRows();
+}
+function bar(label, d, max) {
+  const t = d.c + d.q, w = v => (100 * v / max).toFixed(1) + '%';
+  return `<div class="bar" title="Tunai ${rm(d.c)} · QR ${rm(d.q)} · ${d.n} transaksi"><span>${esc(label)}</span><div class="track"><div class="c" style="width:${w(d.c)}"></div><div class="q" style="width:${w(d.q)}"></div></div><span class="amt">${rm(t)}</span></div>`;
+}
+function renderRows() {
+  $('txCount').textContent = sales.length ? `${sales.length}` : '';
+  const list = sales.slice(0, shown);
+  $('rows').innerHTML = list.length ? list.map(s => `<tr class="tx" data-id="${esc(s.id)}">
+      <td class="n">${fmtTime(s.ts)}${multiDay() ? `<small class="d">${fmtShort(s.ts)}</small>` : ''}</td>
+      <td class="items-cell">${esc(s.items.map(it => `${it.name} ×${it.qty}`).join(', ')) || '<em>tiada butiran item</em>'}${Math.abs(s.adj) > 0.001 ? `<span class="tag adj">${s.adj > 0 ? '+' : '−'}${rm(Math.abs(s.adj))}${s.note ? ' · ' + esc(s.note) : ''}</span>` : ''}</td>
+      <td class="n"><span class="tag ${s.method}">${s.method === 'qr' ? 'QR Pay' : 'Tunai'}</span></td>
+      <td class="r"><b>${rm(s.total)}</b></td>
+    </tr>`).join('') : `<tr><td colspan="4" class="empty"><b>Tiada transaksi</b>Tiada jualan direkod dalam tempoh ini.</td></tr>`;
+  $('more').innerHTML = sales.length > shown ? `<button class="btn sm" id="moreBtn" type="button">Papar lagi (${sales.length - shown} lagi)</button>` : '';
+  const mb = $('moreBtn'); if (mb) mb.onclick = () => { shown += 200; renderRows(); };
+}
+$('rows').addEventListener('click', e => { const tr = e.target.closest('tr.tx'); if (!tr) return; const s = sales.find(x => x.id === tr.dataset.id); if (s) showDetail(s); });
+
+function showDetail(s) {
+  const m = H.modal(`<h3>Transaksi</h3><p>${fmtDate(s.ts)} · ${fmtTime(s.ts)} &nbsp;<span class="tag ${s.method}">${s.method === 'qr' ? 'QR Pay' : 'Tunai'}</span></p>
+    <div class="dl">
+      ${s.items.map(it => `<div><span>${esc(it.name)} × ${it.qty}${it.orig !== it.price ? ` <span class="tag adj">harga ubah</span>` : ''}</span><b>${rm(it.price * it.qty)}</b></div>`).join('') || '<div><span>Tiada butiran item</span><b></b></div>'}
+      <div class="sep"></div>
+      <div><span>Subtotal</span><b>${rm(s.subtotal)}</b></div>
+      ${Math.abs(s.adj) > 0.001 ? `<div><span>Pelarasan${s.note ? ' · ' + esc(s.note) : ''}</span><b>${s.adj > 0 ? '+' : '−'}${rm(Math.abs(s.adj))}</b></div>` : ''}
+      <div><span>Jumlah</span><b style="font-size:1.1rem">${rm(s.total)}</b></div>
+      <div><span>${s.method === 'qr' ? 'Diterima melalui QR' : 'Tunai diterima'}</span><b>${rm(s.paid)}</b></div>
+      ${s.method === 'cash' ? `<div><span>Baki</span><b>${rm(s.change)}</b></div>` : ''}
+      ${s.device ? `<div><span>Peranti</span><b>${esc(s.device)}</b></div>` : ''}
+      <div><span>ID</span><b style="font-size:.72rem;color:var(--muted)">${esc(s.id)}</b></div>
+    </div>
+    <div class="actions">
+      <button class="btn sm" data-sw type="button">Tukar ke ${s.method === 'qr' ? 'Tunai' : 'QR Pay'}</button>
+      <button class="btn sm danger" data-del type="button">Padam transaksi</button>
+      <button class="btn sm primary" data-x type="button">Tutup</button>
+    </div>`);
+  m.back.querySelector('[data-x]').onclick = m.close;
+  m.back.querySelector('[data-sw]').onclick = async () => {
+    const to = s.method === 'qr' ? 'cash' : 'qr';
+    m.close();
+    if (!await H.confirm({ title: 'Tukar kaedah bayaran?', text: `Transaksi ${rm(s.total)} akan direkod sebagai ${to === 'qr' ? 'QR Pay' : 'Tunai'}.`, ok: 'Tukar' })) return;
+    await KantinDB.updateSale(s.id, { method: to, paid: s.total, change: 0 });
+    toast('Kaedah bayaran ditukar', 'ok');
+  };
+  m.back.querySelector('[data-del]').onclick = async () => {
+    m.close();
+    if (!await H.confirm({ title: 'Padam transaksi ini?', text: `${rm(s.total)} pada ${fmtTime(s.ts)}, ${fmtShort(s.ts)}. Tindakan ini tidak boleh dibatalkan.`, ok: 'Padam', danger: true })) return;
+    await KantinDB.deleteSale(s.id);
+    toast('Transaksi dipadam', 'ok');
+  };
 }
 
-/* ---- controls ---- */
-$('periods').addEventListener('click',e=>{
-  const b=e.target.closest('.pbtn'); if(!b) return;
-  mode=b.dataset.p; pickedDate=null; $('pickDate').value='';
-  document.querySelectorAll('.pbtn').forEach(x=>x.classList.toggle('active',x===b));
-  render();
+/* ---------------- CSV */
+const fname = base => `${base}_${ymd(cur.from)}${multiDay() ? '_' + ymd(cur.to - 1) : ''}.csv`;
+$('csvTx').addEventListener('click', () => {
+  const rows = [['Tarikh', 'Masa', 'ID', 'Kaedah', 'Item', 'Subtotal (RM)', 'Pelarasan (RM)', 'Nota', 'Jumlah (RM)', 'Diterima (RM)', 'Baki (RM)', 'Peranti']];
+  sales.slice().reverse().forEach(s => rows.push([ymd(s.ts), fmtTime(s.ts), s.id, s.method === 'qr' ? 'QR' : 'Tunai', s.items.map(it => `${it.name} x${it.qty}`).join('; '), s.subtotal.toFixed(2), s.adj.toFixed(2), s.note, s.total.toFixed(2), s.paid.toFixed(2), s.change.toFixed(2), s.device]));
+  KantinDB.downloadFile(fname('jualan'), csv(rows), 'text/csv;charset=utf-8');
 });
-$('goDate').addEventListener('click',()=>{
-  if(!$('pickDate').value){alert('Sila pilih tarikh dahulu.');return}
-  pickedDate=$('pickDate').value;
-  document.querySelectorAll('.pbtn').forEach(x=>x.classList.remove('active'));
-  render();
-});
-
-/* ---- CSV export ---- */
-function csv(rows,name){
-  if(!rows.length){alert('Tiada data untuk dimuat turun.');return}
-  const head=['No Resit','Tarikh','Masa','Menu','Kuantiti','Harga Seunit (RM)','Jumlah Baris (RM)','Jumlah Resit (RM)','Tunai (RM)','Baki (RM)'];
-  const lines=[head.join(',')];
-  rows.forEach(x=>{
-    const t=new Date(x.ts);
-    x.items.forEach((i,idx)=>{
-      lines.push([x.id,t.toLocaleDateString('en-GB'),t.toLocaleTimeString('en-GB'),
-        '"'+i.name.replace(/"/g,'""')+'"',i.qty,i.price.toFixed(2),(i.qty*i.price).toFixed(2),
-        idx===0?x.total.toFixed(2):'',idx===0?x.paid.toFixed(2):'',idx===0?x.change.toFixed(2):''].join(','));
-    });
-  });
-  lines.push('');
-  lines.push(['JUMLAH BESAR','','','','','','',rows.reduce((a,x)=>a+x.total,0).toFixed(2)].join(','));
-  const blob=new Blob(['\ufeff'+lines.join('\n')],{type:'text/csv;charset=utf-8'});
-  const a=document.createElement('a');
-  a.href=URL.createObjectURL(blob); a.download=name; a.click(); URL.revokeObjectURL(a.href);
-}
-$('csvPeriod').addEventListener('click',()=>{
-  const {s,e}=range();
-  const rows=load().filter(x=>{const t=new Date(x.ts);return t>=s&&t<e});
-  csv(rows,`jualan-${mode}${pickedDate?'-'+pickedDate:''}-${new Date().toISOString().slice(0,10)}.csv`);
-});
-$('csvAll').addEventListener('click',()=>csv(load(),`backup-jualan-hakaksado-${new Date().toISOString().slice(0,10)}.csv`));
-$('printBtn').addEventListener('click',()=>window.print());
-$('wipe').addEventListener('click',()=>{
-  if(!load().length){alert('Tiada data.');return}
-  if(confirm('PADAM SEMUA data jualan? Tindakan ini tidak boleh dibatalkan.\n\nDisyorkan buat Backup CSV dahulu.')
-   && confirm('Pasti? Tekan OK untuk padam kekal.')){
-    localStorage.removeItem(KEY); render(); alert('Semua data telah dipadam.');
-  }
+$('csvItems').addEventListener('click', () => {
+  const rows = [['Tarikh', 'Masa', 'ID Transaksi', 'Kaedah', 'Item', 'Kategori', 'Harga seunit (RM)', 'Kuantiti', 'Jumlah (RM)']];
+  sales.slice().reverse().forEach(s => s.items.forEach(it => rows.push([ymd(s.ts), fmtTime(s.ts), s.id, s.method === 'qr' ? 'QR' : 'Tunai', it.name, it.cat, it.price.toFixed(2), it.qty, money(it.price * it.qty).toFixed(2)])));
+  KantinDB.downloadFile(fname('jualan_item'), csv(rows), 'text/csv;charset=utf-8');
 });
 
-render();
-window.addEventListener('focus',render);
+KantinDB.ready().then(() => setPeriod(period));
 </script>
 </body>
 </html>
