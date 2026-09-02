@@ -7,47 +7,16 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="app.css" />
 <style>
-  :root{
-    --bg:#272833; --rail:#1F2029; --panel:#31333F; --panel-2:#3A3D4B;
-    --line:rgba(255,255,255,.08); --text:#F4F4F7; --muted:#A5A7B5; --ink:#272833;
-    --orange:#EB5A0F; --orange-2:#F58A3C; --green:#3ECF8E; --red:#F0625C;
-    color-scheme:dark;
-  }
-  *{box-sizing:border-box;margin:0;padding:0}
-  html{scroll-behavior:smooth}
-  body{font-family:"Manrope","Segoe UI",system-ui,-apple-system,Roboto,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-weight:500;-webkit-font-smoothing:antialiased}
-  a{color:inherit}
-  :focus-visible{outline:2px solid var(--orange-2);outline-offset:3px}
-
-  /* ---------- left rail ---------- */
-  .rail{position:fixed;left:0;top:0;bottom:0;width:84px;background:var(--rail);border-right:1px solid var(--line);display:flex;flex-direction:column;align-items:center;padding:18px 0;z-index:60}
-  .rail .back{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;color:var(--muted);text-decoration:none;transition:background .2s,color .2s}
-  .rail .back:hover{color:#fff;background:rgba(255,255,255,.06)}
-  .rail .back svg{width:22px;height:22px}
-  .rail nav{display:flex;flex-direction:column;gap:10px;margin:auto 0}
-  .nav{width:60px;padding:9px 0 7px;border-radius:14px;display:flex;flex-direction:column;align-items:center;gap:5px;color:var(--muted);text-decoration:none;font-size:.62rem;font-weight:700;transition:background .2s,color .2s}
-  .rail svg{stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-  .nav svg{width:22px;height:22px}
-  .nav:hover{background:rgba(255,255,255,.06);color:#fff}
-  .nav.active{background:var(--orange);color:#fff;box-shadow:0 8px 18px rgba(235,90,15,.35)}
-
-  /* ---------- page ---------- */
-  main{margin-left:84px;padding:30px 36px 56px;max-width:1280px}
-  .head{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:22px}
-  .brand{font-size:.8rem;font-weight:700;color:var(--muted);margin-bottom:2px}
-  h1{font-size:1.75rem;font-weight:500;letter-spacing:-.01em;line-height:1.15}
-  h1 b{font-weight:800}
-  .clock{display:inline-flex;align-items:center;gap:12px;background:rgba(255,255,255,.06);border:1px solid var(--line);border-radius:999px;padding:8px 16px;font-size:.84rem;color:var(--muted);font-variant-numeric:tabular-nums}
-  .clock b{color:#fff;font-size:1rem;font-weight:800}
-
   /* ---------- sales summary ---------- */
   .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px}
-  .stat{background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:16px;padding:14px 18px;text-decoration:none;transition:background .2s}
+  .stat{background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:16px;padding:14px 18px;text-decoration:none;transition:background .2s;display:block}
   .stat:hover{background:rgba(255,255,255,.09)}
   .stat .label{font-size:.76rem;color:var(--muted);font-weight:700}
   .stat .value{font-size:1.35rem;font-weight:800;margin-top:4px;font-variant-numeric:tabular-nums}
   .stat .sub{font-size:.74rem;color:var(--muted);margin-top:2px}
+  .stat .split{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
 
   /* ---------- category cards ---------- */
   .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
@@ -60,6 +29,7 @@
   }
   .card:nth-child(2){animation-delay:.06s}.card:nth-child(3){animation-delay:.12s}.card:nth-child(4){animation-delay:.18s}
   .card:nth-child(5){animation-delay:.24s}.card:nth-child(6){animation-delay:.30s}.card:nth-child(7){animation-delay:.36s}
+  .card:nth-child(n+8){animation-delay:.42s}
   @keyframes rise{from{opacity:0;transform:translateY(18px)}}
   .card:hover{transform:translateY(-6px);box-shadow:0 22px 40px rgba(0,0,0,.36)}
   .card::before{content:"";position:absolute;inset:0;z-index:-1;background:radial-gradient(circle at 78% 20%,rgba(255,255,255,.3),transparent 45%)}
@@ -79,22 +49,16 @@
   /* ---------- notes ---------- */
   .info{margin-top:26px;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:18px 22px;display:flex;gap:28px;flex-wrap:wrap;font-size:.84rem;color:var(--muted)}
   .info div b{display:block;color:#fff;font-size:.78rem;margin-bottom:2px}
-  footer{margin-top:22px;color:var(--muted);font-size:.8rem}
 
   @media (max-width:1100px){
     .grid,.stats{grid-template-columns:repeat(2,1fr)}
   }
   @media (max-width:720px){
-    .rail{top:auto;right:0;bottom:0;width:auto;height:68px;flex-direction:row;justify-content:space-around;padding:0 8px;border-right:0;border-top:1px solid var(--line)}
-    .rail .back{display:none}
-    .rail nav{flex-direction:row;margin:0;gap:4px}
-    main{margin-left:0;padding:22px 16px 96px}
     .grid{grid-template-columns:1fr}
     .stats{grid-template-columns:repeat(2,1fr);gap:10px}
     .feature{grid-column:auto;padding-right:150px}
     .feature .art{font-size:6rem;right:16px}
   }
-  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
@@ -106,131 +70,145 @@
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6"/></svg>Kaunter</a>
     <a class="nav" href="salesdata.html">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>Laporan</a>
-    <a class="nav" href="foodmenu.html#senarai">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><circle cx="7" cy="7" r="1"/></svg>Harga</a>
+    <a class="nav" href="menu.html">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><circle cx="7" cy="7" r="1"/></svg>Menu</a>
+    <a class="nav" href="settings.html">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Tetapan</a>
   </nav>
 </aside>
 
 <main>
   <div class="head">
     <div>
-      <div class="brand">Kantin Dapo Hakaksado</div>
+      <div class="brand" id="brand">Kantin Dapo Hakaksado</div>
       <h1><b>Menu</b> Kategori</h1>
     </div>
-    <div class="clock"><span id="today">—</span><b id="now">--:--:--</b></div>
+    <div class="head-right">
+      <a id="syncBadge" class="sync" href="settings.html"><i></i>Memuatkan…</a>
+      <div class="clock"><span id="today">—</span><b id="now">--:--:--</b></div>
+    </div>
   </div>
 
   <section class="stats" aria-label="Ringkasan jualan">
-    <a class="stat" href="salesdata.html?p=day"><div class="label">Jualan hari ini</div><div class="value" id="sToday">RM0.00</div><div class="sub" id="sTodayCount">0 transaksi</div></a>
-    <a class="stat" href="salesdata.html?p=week"><div class="label">Minggu ini</div><div class="value" id="sWeek">RM0.00</div><div class="sub" id="sWeekRange">—</div></a>
-    <a class="stat" href="salesdata.html?p=month"><div class="label">Bulan ini</div><div class="value" id="sMonth">RM0.00</div><div class="sub" id="sMonthName">—</div></a>
-    <a class="stat" href="salesdata.html"><div class="label">Transaksi terakhir</div><div class="value" id="sLast">—</div><div class="sub" id="sLastAmt">Belum ada jualan</div></a>
+    <a class="stat" href="salesdata.html?p=day"><div class="label">Jualan hari ini</div><div class="value" id="sToday">RM0.00</div><div class="sub" id="sTodayCount">0 transaksi</div><div class="split"><span class="tag cash" id="sTodayCash">Tunai RM0.00</span><span class="tag qr" id="sTodayQr">QR RM0.00</span></div></a>
+    <a class="stat" href="salesdata.html?p=week"><div class="label">Minggu ini</div><div class="value" id="sWeek">RM0.00</div><div class="sub" id="sWeekRange">—</div><div class="split"><span class="tag cash" id="sWeekCash">Tunai RM0.00</span><span class="tag qr" id="sWeekQr">QR RM0.00</span></div></a>
+    <a class="stat" href="salesdata.html?p=month"><div class="label">Bulan ini</div><div class="value" id="sMonth">RM0.00</div><div class="sub" id="sMonthName">—</div><div class="split"><span class="tag cash" id="sMonthCash">Tunai RM0.00</span><span class="tag qr" id="sMonthQr">QR RM0.00</span></div></a>
+    <a class="stat" href="salesdata.html?p=day"><div class="label">Transaksi terakhir</div><div class="value" id="sLast">—</div><div class="sub" id="sLastAmt">Belum ada jualan</div><div class="split" id="sLastTag"></div></a>
   </section>
 
-  <nav class="grid" aria-label="Menu utama">
+  <nav class="grid" id="grid" aria-label="Menu utama">
     <a class="card feature" href="foodmenu.html" style="--c1:#f79a3f;--c2:#e8560a">
       <span class="art" aria-hidden="true">🍛</span>
       <h2>Kaunter Bayaran</h2>
-      <p>Klik makanan yang dipilih pelanggan dan jumlah dikira automatik. Masukkan tunai, baki keluar serta-merta.</p>
+      <p>Klik makanan yang dipilih pelanggan dan jumlah dikira automatik. Terima tunai atau QR, baki keluar serta-merta.</p>
       <span class="go">Buka Kaunter</span>
-    </a>
-    <a class="card" href="foodmenu.html?cat=Sarapan%20Pagi" style="--c1:#ef7aa0;--c2:#d7548a">
-      <span class="art" aria-hidden="true">🍳</span>
-      <h2>Sarapan Pagi</h2>
-      <p>Roti, nasi lemak, mee goreng, soto dan lontong.</p>
-      <span class="go">Lihat Menu</span>
-    </a>
-    <a class="card sky" href="foodmenu.html?cat=Nasi%20%26%20Telur" style="--c1:#c4d0de;--c2:#a3b4c8">
-      <span class="art" aria-hidden="true">🍚</span>
-      <h2>Nasi &amp; Telur</h2>
-      <p>Nasi putih, minyak, briyani, tomato dan pelbagai telur.</p>
-      <span class="go">Lihat Menu</span>
-    </a>
-    <a class="card" href="foodmenu.html?cat=Lauk%20(Ikan%20%26%20Ayam)" style="--c1:#86c4e6;--c2:#4a95c9">
-      <span class="art" aria-hidden="true">🐟</span>
-      <h2>Lauk Ikan &amp; Ayam</h2>
-      <p>Kembong, selar, bawal, siakap dan ayam goreng.</p>
-      <span class="go">Lihat Menu</span>
-    </a>
-    <a class="card" href="foodmenu.html?cat=Sayur-Sayuran" style="--c1:#8ad3cd;--c2:#4fa3a8">
-      <span class="art" aria-hidden="true">🥬</span>
-      <h2>Sayur-Sayuran</h2>
-      <p>Kangkung, bayam, sawi, brokoli dan sambal jawa.</p>
-      <span class="go">Lihat Menu</span>
-    </a>
-    <a class="card" href="foodmenu.html?cat=Minuman%20(Panas%20%2F%20Sejuk)" style="--c1:#b6abe6;--c2:#7f6fcb">
-      <span class="art" aria-hidden="true">☕️</span>
-      <h2>Minuman Panas &amp; Sejuk</h2>
-      <p>Teh, kopi, Nescafe dan Milo, panas atau sejuk.</p>
-      <span class="go">Lihat Menu</span>
-    </a>
-    <a class="card" href="foodmenu.html?cat=Minuman%20Lain" style="--c1:#f19163;--c2:#e06522">
-      <span class="art" aria-hidden="true">🥤</span>
-      <h2>Minuman Lain</h2>
-      <p>Cordial, air tin dan air mineral.</p>
-      <span class="go">Lihat Menu</span>
     </a>
   </nav>
 
   <section class="info" aria-label="Maklumat kantin">
     <div><b>Waktu operasi</b>7.00 pagi – 3.00 petang</div>
     <div><b>Pesanan</b>Sila beratur dan bayar sebelum makan</div>
-    <div><b>Simpanan data</b>Data jualan disimpan dalam pelayar ini. Buat backup CSV di halaman Laporan setiap hari.</div>
+    <div id="storageNote"><b>Simpanan data</b>Memuatkan…</div>
   </section>
 
   <footer>Terima kasih kerana membeli di kantin kami. Sila datang lagi.</footer>
 </main>
 
+<script src="config.js"></script>
+<script src="menu-default.js"></script>
+<script src="db.js"></script>
 <script>
-const KEY='hakaksado_sales_v1';
-const load=()=>{try{return JSON.parse(localStorage.getItem(KEY))||[]}catch(e){return[]}};
-const rm=n=>'RM'+Number(n||0).toFixed(2);
-const MONTHS=['Januari','Februari','Mac','April','Mei','Jun','Julai','Ogos','September','Oktober','November','Disember'];
-const DAYS=['Ahad','Isnin','Selasa','Rabu','Khamis','Jumaat','Sabtu'];
+const { rm, money, esc, MONTHS, startOfDay, startClock, fmtTime, ymd } = KantinDB.h;
+startClock('today', 'now');
+document.getElementById('brand').textContent = KantinDB.state.shopName;
 
-function tick(){
-  const d=new Date();
-  document.getElementById('now').textContent=d.toLocaleTimeString('en-GB');
-  document.getElementById('today').textContent=`${DAYS[d.getDay()]}, ${d.getDate()} ${MONTHS[d.getMonth()]} ${d.getFullYear()}`;
-}
-tick(); setInterval(tick,1000);
-
-function countUp(el,target){
-  const start=performance.now(),dur=900;
-  (function step(t){
-    const p=Math.min((t-start)/dur,1);
-    el.textContent=rm(target*(1-Math.pow(1-p,3)));
-    if(p<1) requestAnimationFrame(step);
+const shown = {};                       // current displayed numbers, so the count-up animates from where it is
+function countUp(id, target) {
+  const el = document.getElementById(id);
+  const from = shown[id] || 0; shown[id] = target;
+  if (Math.abs(target - from) < 0.005) { el.textContent = rm(target); return; }
+  const start = performance.now(), dur = 900;
+  (function step(t) {
+    const p = Math.min((t - start) / dur, 1);
+    el.textContent = rm(from + (target - from) * (1 - Math.pow(1 - p, 3)));
+    if (p < 1) requestAnimationFrame(step);
   })(start);
 }
 
-function render(){
-  const sales=load(), now=new Date();
-  const startDay=new Date(now.getFullYear(),now.getMonth(),now.getDate());
-  const dow=(now.getDay()+6)%7; // Monday = 0
-  const startWeek=new Date(startDay); startWeek.setDate(startDay.getDate()-dow);
-  const startMonth=new Date(now.getFullYear(),now.getMonth(),1);
-
-  const sum=from=>sales.filter(s=>new Date(s.ts)>=from);
-  const day=sum(startDay), week=sum(startWeek), month=sum(startMonth);
-  const tot=a=>a.reduce((x,s)=>x+s.total,0);
-
-  countUp(document.getElementById('sToday'),tot(day));
-  countUp(document.getElementById('sWeek'),tot(week));
-  countUp(document.getElementById('sMonth'),tot(month));
-  document.getElementById('sTodayCount').textContent=day.length+' transaksi';
-  const endWeek=new Date(startWeek); endWeek.setDate(startWeek.getDate()+6);
-  document.getElementById('sWeekRange').textContent=`${startWeek.getDate()} ${MONTHS[startWeek.getMonth()].slice(0,3)} – ${endWeek.getDate()} ${MONTHS[endWeek.getMonth()].slice(0,3)}`;
-  document.getElementById('sMonthName').textContent=MONTHS[now.getMonth()]+' '+now.getFullYear();
-
-  if(sales.length){
-    const last=sales[sales.length-1], t=new Date(last.ts);
-    document.getElementById('sLast').textContent=t.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
-    document.getElementById('sLastAmt').textContent=rm(last.total)+' pada '+t.toLocaleDateString('en-GB');
-  }
+const DISPLAY_NAME = { 'Lauk (Ikan & Ayam)': 'Lauk Ikan & Ayam', 'Minuman (Panas / Sejuk)': 'Minuman Panas & Sejuk' };
+function describe(items) {
+  const names = items.map(i => i.name.toLowerCase());
+  if (!names.length) return 'Belum ada item. Tambah di halaman Menu.';
+  const head = names.slice(0, 5), more = names.length > 5;
+  let s = head.length === 1 ? head[0] : head.slice(0, -1).join(', ') + (more ? ', ' + head[head.length - 1] + ' dan lain-lain' : ' dan ' + head[head.length - 1]);
+  return s.charAt(0).toUpperCase() + s.slice(1) + '.';
 }
-render();
-window.addEventListener('focus',render);
+function renderCards(menu) {
+  const grid = document.getElementById('grid');
+  grid.querySelectorAll('[data-dyn]').forEach(n => n.remove());
+  const byCat = {}; menu.items.forEach(it => (byCat[it.cat] = byCat[it.cat] || []).push(it));
+  grid.insertAdjacentHTML('beforeend', menu.cats.map((cat, i) => {
+    const st = KantinDB.catStyle(cat, i);
+    return `<a class="card${st.dark ? ' sky' : ''}" data-dyn href="foodmenu.html?cat=${encodeURIComponent(cat)}" style="--c1:${st.c1};--c2:${st.c2}">
+      <span class="art" aria-hidden="true">${st.emoji}</span>
+      <h2>${esc(DISPLAY_NAME[cat] || cat)}</h2>
+      <p>${esc(describe(byCat[cat] || []))}</p>
+      <span class="go">Lihat Menu</span></a>`;
+  }).join(''));
+}
+
+function ranges() {
+  const now = new Date(), startDay = startOfDay(now);
+  const dow = (now.getDay() + 6) % 7;               // Monday = 0
+  const startWeek = new Date(startDay); startWeek.setDate(startDay.getDate() - dow);
+  const startMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+  return { now, startDay, startWeek, startMonth };
+}
+function split(arr) {
+  const cash = arr.filter(s => s.method !== 'qr'), qr = arr.filter(s => s.method === 'qr');
+  const tot = a => money(a.reduce((x, s) => x + s.total, 0));
+  return { total: tot(arr), cash: tot(cash), qr: tot(qr), n: arr.length };
+}
+function renderStats(sales) {
+  const { now, startDay, startWeek, startMonth } = ranges();
+  const day = split(sales.filter(s => s.ts >= +startDay));
+  const week = split(sales.filter(s => s.ts >= +startWeek));
+  const month = split(sales.filter(s => s.ts >= +startMonth));
+  countUp('sToday', day.total); countUp('sWeek', week.total); countUp('sMonth', month.total);
+  document.getElementById('sTodayCount').textContent = day.n + ' transaksi';
+  document.getElementById('sTodayCash').textContent = 'Tunai ' + rm(day.cash);
+  document.getElementById('sTodayQr').textContent = 'QR ' + rm(day.qr);
+  document.getElementById('sWeekCash').textContent = 'Tunai ' + rm(week.cash);
+  document.getElementById('sWeekQr').textContent = 'QR ' + rm(week.qr);
+  document.getElementById('sMonthCash').textContent = 'Tunai ' + rm(month.cash);
+  document.getElementById('sMonthQr').textContent = 'QR ' + rm(month.qr);
+  const endWeek = new Date(startWeek); endWeek.setDate(startWeek.getDate() + 6);
+  document.getElementById('sWeekRange').textContent = `${startWeek.getDate()} ${MONTHS[startWeek.getMonth()].slice(0, 3)} – ${endWeek.getDate()} ${MONTHS[endWeek.getMonth()].slice(0, 3)}`;
+  document.getElementById('sMonthName').textContent = MONTHS[now.getMonth()] + ' ' + now.getFullYear();
+  if (sales.length) renderLast(sales[sales.length - 1]);
+}
+function renderLast(last) {
+  if (!last) return;
+  document.getElementById('sLast').textContent = fmtTime(last.ts);
+  document.getElementById('sLastAmt').textContent = rm(last.total) + ' pada ' + new Date(last.ts).toLocaleDateString('en-GB');
+  document.getElementById('sLastTag').innerHTML = `<span class="tag ${last.method}">${last.method === 'qr' ? 'QR Pay' : 'Tunai'}</span>`;
+}
+function renderStorageNote(st) {
+  const el = document.getElementById('storageNote');
+  if (st.mode === 'cloud') el.innerHTML = '<b>Simpanan data</b>Data jualan disegerakkan ke cloud dan sama pada semua peranti. Buat sandaran di halaman Tetapan sekali-sekala.';
+  else el.innerHTML = '<b>Simpanan data</b>Data jualan disimpan dalam pelayar ini sahaja. Untuk segerak semua peranti, sediakan cloud di halaman <a href="settings.html">Tetapan</a>. Buat backup CSV di halaman Laporan setiap hari.';
+}
+
+KantinDB.onState(renderStorageNote);
+KantinDB.ready().then(st => {
+  renderStorageNote(st);
+  KantinDB.watchMenu(renderCards);
+  const { startWeek, startMonth } = ranges();
+  KantinDB.watchSales({ from: Math.min(+startWeek, +startMonth) }, renderStats);
+  KantinDB.getLastSale().then(renderLast).catch(() => {});
+});
+const loadedDay = ymd(new Date());
+window.addEventListener('focus', () => { if (ymd(new Date()) !== loadedDay) location.reload(); });
 </script>
 </body>
 </html>
