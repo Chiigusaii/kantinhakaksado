@@ -2,70 +2,83 @@
 <html lang="ms">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="theme-color" content="#272833" />
 <title>Laporan Jualan — Kantin Dapo Hakaksado</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="app.css" />
 <style>
-  .periods{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:10px}
-  .range{display:none;gap:8px;align-items:center;flex-wrap:wrap}
+  .periods{display:flex;gap:.6rem;align-items:center;flex-wrap:wrap;margin-bottom:.7rem}
+  .range{display:none;gap:.55rem;align-items:center;flex-wrap:wrap}
   .range.show{display:flex}
   .range .input{width:auto}
-  .range-label{color:var(--muted);font-size:.84rem;font-weight:700;margin:6px 0 18px}
-  .stats{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:18px}
-  .stat{background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:16px;padding:14px 16px}
-  .stat .label{font-size:.74rem;color:var(--muted);font-weight:700}
-  .stat .value{font-size:1.25rem;font-weight:800;margin-top:4px;font-variant-numeric:tabular-nums}
-  .stat .sub{font-size:.72rem;color:var(--muted);margin-top:2px}
+  .range-label{color:var(--muted);font-size:.92rem;font-weight:700;margin:.5rem 0 1.2rem}
+  .stats{display:grid;grid-template-columns:repeat(6,1fr);gap:.8rem;margin-bottom:1.2rem}
+  .stat{
+    background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:var(--r-lg);
+    padding:1rem 1.1rem;transition:transform .22s var(--ease),box-shadow .22s,background .2s
+  }
+  .stat:hover{transform:translateY(-.2rem);box-shadow:0 .8rem 1.4rem rgba(0,0,0,.22);background:rgba(255,255,255,.08)}
+  .stat .label{font-size:.82rem;color:var(--muted);font-weight:800}
+  .stat .value{font-size:1.5rem;font-weight:800;margin-top:.25rem;font-variant-numeric:tabular-nums}
+  .stat .sub{font-size:.8rem;color:var(--muted);margin-top:.15rem}
   .stat.cash .value{color:#ffb58a}
   .stat.qr .value{color:#d6cdff}
-  .two{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
-  .bars{display:flex;flex-direction:column;gap:8px}
-  .bar{display:grid;grid-template-columns:112px 1fr 92px;gap:10px;align-items:center;font-size:.8rem;font-weight:700;color:var(--muted)}
-  .bar .track{height:14px;background:rgba(255,255,255,.06);border-radius:999px;overflow:hidden;display:flex}
-  .bar .c{background:var(--orange);height:100%}
-  .bar .q{background:var(--purple);height:100%}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:1.1rem;margin-bottom:1.1rem}
+  .bars{display:flex;flex-direction:column;gap:.6rem}
+  .bar{
+    display:grid;grid-template-columns:8rem 1fr 6.5rem;gap:.7rem;align-items:center;
+    font-size:.9rem;font-weight:700;color:var(--muted);animation:fadeUp .32s var(--ease) backwards
+  }
+  .bar .track{height:1.1rem;background:rgba(255,255,255,.06);border-radius:999px;overflow:hidden;display:flex}
+  .bar .c{background:var(--orange);height:100%;transition:width .5s var(--ease)}
+  .bar .q{background:var(--purple);height:100%;transition:width .5s var(--ease)}
   .bar .amt{text-align:right;font-weight:800;color:#fff;font-variant-numeric:tabular-nums}
-  .legend{display:flex;gap:14px;font-size:.74rem;color:var(--muted);font-weight:700;margin-top:12px}
-  .legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px}
-  table{width:100%;border-collapse:collapse;font-size:.84rem}
-  th{text-align:left;color:var(--muted);font-size:.72rem;font-weight:800;padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
-  td{padding:10px;border-bottom:1px solid var(--line);vertical-align:top}
+  .legend{display:flex;gap:1rem;font-size:.85rem;color:var(--muted);font-weight:700;margin-top:.9rem}
+  .legend i{display:inline-block;width:.75rem;height:.75rem;border-radius:.25rem;margin-right:.4rem;vertical-align:-1px}
+  table{width:100%;border-collapse:collapse;font-size:.95rem}
+  th{text-align:left;color:var(--muted);font-size:.82rem;font-weight:800;padding:.7rem .8rem;border-bottom:1px solid var(--line);white-space:nowrap}
+  td{padding:.9rem .8rem;border-bottom:1px solid var(--line);vertical-align:top}
   td.r,th.r{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
   td.n{white-space:nowrap}
   tr.tx{cursor:pointer}
-  tr.tx:hover td{background:rgba(255,255,255,.04)}
+  tr.tx td{transition:background .18s}
+  tr.tx:hover td{background:rgba(255,255,255,.05)}
+  tr.tx:active td{background:rgba(235,90,15,.12)}
   .items-cell{color:var(--muted);line-height:1.45}
-  .items-cell .tag{margin-left:6px}
-  .toolbar{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
-  .tbl-wrap{overflow:auto}
-  .more{display:flex;justify-content:center;padding:14px 0 4px}
-  .dl{display:flex;flex-direction:column;gap:6px;margin:12px 0;font-size:.86rem}
-  .dl div{display:flex;justify-content:space-between;gap:14px}
+  .items-cell .tag{margin-left:.4rem}
+  .toolbar{display:flex;justify-content:space-between;align-items:center;gap:.7rem;flex-wrap:wrap;margin-bottom:.7rem}
+  .tbl-wrap{overflow:auto;-webkit-overflow-scrolling:touch}
+  .more{display:flex;justify-content:center;padding:1rem 0 .25rem}
+  .dl{display:flex;flex-direction:column;gap:.4rem;margin:1rem 0;font-size:.95rem}
+  .dl div{display:flex;justify-content:space-between;gap:1rem}
   .dl div span:first-child{color:var(--muted)}
   .dl div b{font-variant-numeric:tabular-nums}
-  .dl .sep{border-top:1px solid var(--line);margin:4px 0}
-  small.d{display:block;color:var(--muted);font-weight:700;font-size:.7rem}
-  @media (max-width:1100px){ .stats{grid-template-columns:repeat(3,1fr)} }
-  @media (max-width:900px){ .two{grid-template-columns:1fr} }
-  @media (max-width:720px){ .stats{grid-template-columns:repeat(2,1fr);gap:10px} .bar{grid-template-columns:90px 1fr 80px} .hide-m{display:none} }
+  .dl .sep{border-top:1px solid var(--line);margin:.3rem 0}
+  small.d{display:block;color:var(--muted);font-weight:700;font-size:.78rem}
+  @media (max-width:1300px){ .stats{grid-template-columns:repeat(3,1fr)} }
+  @media (max-width:1000px){ .two{grid-template-columns:1fr} }
+  @media (max-width:760px){ .stats{grid-template-columns:repeat(2,1fr);gap:.7rem} .bar{grid-template-columns:6rem 1fr 5.5rem} .hide-m{display:none} }
 </style>
 </head>
 <body>
 <aside class="rail" aria-label="Navigasi">
   <nav>
     <a class="nav" href="index.html">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg>Utama</a>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg><span data-i18n="nav.home">Utama</span></a>
     <a class="nav" href="foodmenu.html">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6"/></svg>Kaunter</a>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6"/></svg><span data-i18n="nav.counter">Kaunter</span></a>
     <a class="nav active" aria-current="page" href="salesdata.html">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>Laporan</a>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg><span data-i18n="nav.reports">Laporan</span></a>
     <a class="nav" href="menu.html">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><circle cx="7" cy="7" r="1"/></svg>Menu</a>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><circle cx="7" cy="7" r="1"/></svg><span data-i18n="nav.menu">Menu</span></a>
     <a class="nav" href="settings.html">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Tetapan</a>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span data-i18n="nav.settings">Tetapan</span></a>
   </nav>
 </aside>
 
@@ -73,7 +86,7 @@
   <div class="head">
     <div>
       <div class="brand" id="brand">Kantin Dapo Hakaksado</div>
-      <h1><b>Laporan</b> Jualan</h1>
+      <h1 data-i18n-html="reports.title"><b>Laporan</b> Jualan</h1>
     </div>
     <div class="head-right">
       <a id="syncBadge" class="sync" href="settings.html"><i></i>Memuatkan…</a>
@@ -83,54 +96,54 @@
 
   <div class="periods">
     <div class="chips" id="periods">
-      <button class="chip" data-p="day">Hari ini</button>
-      <button class="chip" data-p="yesterday">Semalam</button>
-      <button class="chip" data-p="week">Minggu ini</button>
-      <button class="chip" data-p="month">Bulan ini</button>
-      <button class="chip" data-p="lastmonth">Bulan lepas</button>
-      <button class="chip" data-p="custom">Pilih tarikh</button>
+      <button class="chip" data-p="day" data-i18n="reports.pDay">Hari ini</button>
+      <button class="chip" data-p="yesterday" data-i18n="reports.pYesterday">Semalam</button>
+      <button class="chip" data-p="week" data-i18n="reports.pWeek">Minggu ini</button>
+      <button class="chip" data-p="month" data-i18n="reports.pMonth">Bulan ini</button>
+      <button class="chip" data-p="lastmonth" data-i18n="reports.pLastMonth">Bulan lepas</button>
+      <button class="chip" data-p="custom" data-i18n="reports.pCustom">Pilih tarikh</button>
     </div>
     <div class="range" id="range">
       <input class="input" type="date" id="from" aria-label="Dari">
-      <span class="muted">hingga</span>
+      <span class="muted" data-i18n="reports.to">hingga</span>
       <input class="input" type="date" id="to" aria-label="Hingga">
-      <button class="btn sm primary" id="applyRange" type="button">Papar</button>
+      <button class="btn sm primary" id="applyRange" type="button" data-i18n="reports.apply">Papar</button>
     </div>
   </div>
   <div class="range-label" id="rangeLabel">—</div>
 
   <section class="stats" aria-label="Ringkasan">
-    <div class="stat"><div class="label">Jumlah jualan</div><div class="value" id="vTotal">RM0.00</div><div class="sub" id="vCount">0 transaksi</div></div>
-    <div class="stat cash"><div class="label">Tunai</div><div class="value" id="vCash">RM0.00</div><div class="sub" id="vCashN">0 transaksi</div></div>
-    <div class="stat qr"><div class="label">QR Pay</div><div class="value" id="vQr">RM0.00</div><div class="sub" id="vQrN">0 transaksi</div></div>
-    <div class="stat"><div class="label">Purata setiap transaksi</div><div class="value" id="vAvg">RM0.00</div><div class="sub" id="vItems">0 item terjual</div></div>
-    <div class="stat"><div class="label">Pelarasan harga</div><div class="value" id="vAdj">RM0.00</div><div class="sub" id="vAdjN">0 transaksi diubah</div></div>
-    <div class="stat"><div class="label">Jualan tertinggi</div><div class="value" id="vMax">RM0.00</div><div class="sub" id="vMaxSub">—</div></div>
+    <div class="stat"><div class="label" data-i18n="reports.statTotal">Jumlah jualan</div><div class="value" id="vTotal">RM0.00</div><div class="sub" id="vCount">0 transaksi</div></div>
+    <div class="stat cash"><div class="label" data-i18n="common.cash">Tunai</div><div class="value" id="vCash">RM0.00</div><div class="sub" id="vCashN">0 transaksi</div></div>
+    <div class="stat qr"><div class="label" data-i18n="common.qr">QR Pay</div><div class="value" id="vQr">RM0.00</div><div class="sub" id="vQrN">0 transaksi</div></div>
+    <div class="stat"><div class="label" data-i18n="reports.statAvg">Purata setiap transaksi</div><div class="value" id="vAvg">RM0.00</div><div class="sub" id="vItems">0 item terjual</div></div>
+    <div class="stat"><div class="label" data-i18n="reports.statAdj">Pelarasan harga</div><div class="value" id="vAdj">RM0.00</div><div class="sub" id="vAdjN">0 transaksi diubah</div></div>
+    <div class="stat"><div class="label" data-i18n="reports.statMax">Jualan tertinggi</div><div class="value" id="vMax">RM0.00</div><div class="sub" id="vMaxSub">—</div></div>
   </section>
 
   <div class="two">
     <section class="panel" id="dailyPanel">
-      <h2>Jualan mengikut hari</h2>
+      <h2 id="dailyTitle" data-i18n="reports.byDay">Jualan mengikut hari</h2>
       <div class="bars" id="daily"></div>
-      <div class="legend"><span><i style="background:var(--orange)"></i>Tunai</span><span><i style="background:var(--purple)"></i>QR Pay</span></div>
+      <div class="legend"><span><i style="background:var(--orange)"></i><span data-i18n="common.cash">Tunai</span></span><span><i style="background:var(--purple)"></i><span data-i18n="common.qr">QR Pay</span></span></div>
     </section>
     <section class="panel">
-      <h2>Item terlaris <small>mengikut kuantiti</small></h2>
-      <div class="tbl-wrap"><table><thead><tr><th>Item</th><th class="r">Kuantiti</th><th class="r">Jualan</th></tr></thead><tbody id="top"></tbody></table></div>
+      <h2><span data-i18n="reports.topItems">Item terlaris</span> <small data-i18n="reports.byQty">mengikut kuantiti</small></h2>
+      <div class="tbl-wrap"><table><thead><tr><th data-i18n="reports.colItem">Item</th><th class="r" data-i18n="reports.colQty">Kuantiti</th><th class="r" data-i18n="reports.colSales">Jualan</th></tr></thead><tbody id="top"></tbody></table></div>
     </section>
   </div>
 
   <section class="panel">
     <div class="toolbar">
-      <h2 style="margin:0">Transaksi <small id="txCount"></small></h2>
+      <h2 style="margin:0"><span data-i18n="reports.transactions">Transaksi</span> <small id="txCount"></small></h2>
       <div class="row">
-        <button class="btn sm" id="csvTx" type="button">Muat turun CSV</button>
-        <button class="btn sm" id="csvItems" type="button">CSV mengikut item</button>
+        <button class="btn sm" id="csvTx" type="button" data-i18n="reports.downloadCsv">Muat turun CSV</button>
+        <button class="btn sm" id="csvItems" type="button" data-i18n="reports.csvByItem">CSV mengikut item</button>
       </div>
     </div>
     <div class="tbl-wrap">
       <table>
-        <thead><tr><th>Masa</th><th>Item</th><th>Kaedah</th><th class="r">Jumlah</th></tr></thead>
+        <thead><tr><th data-i18n="reports.colTime">Masa</th><th data-i18n="reports.colItem">Item</th><th data-i18n="reports.colMethod">Kaedah</th><th class="r" data-i18n="reports.colTotal">Jumlah</th></tr></thead>
         <tbody id="rows"></tbody>
       </table>
     </div>
@@ -140,9 +153,11 @@
 
 <script src="config.js"></script>
 <script src="menu-default.js"></script>
+<script src="i18n.js"></script>
 <script src="db.js"></script>
 <script>
 const H = KantinDB.h, { rm, money, esc, startClock, startOfDay, fmtDate, fmtShort, fmtTime, ymd, MONTHS, DAYS, toast, csv } = H;
+const { t } = I18N;
 startClock('today', 'now');
 document.getElementById('brand').textContent = KantinDB.state.shopName;
 const $ = id => document.getElementById(id);
@@ -192,88 +207,88 @@ const multiDay = () => cur && (cur.to - cur.from) > 86400000 + 1;
 function renderAll() {
   const cash = sales.filter(s => s.method !== 'qr'), qr = sales.filter(s => s.method === 'qr');
   const total = sum(sales, s => s.total);
-  $('vTotal').textContent = rm(total); $('vCount').textContent = sales.length + ' transaksi';
-  $('vCash').textContent = rm(sum(cash, s => s.total)); $('vCashN').textContent = cash.length + ' transaksi';
-  $('vQr').textContent = rm(sum(qr, s => s.total)); $('vQrN').textContent = qr.length + ' transaksi';
+  $('vTotal').textContent = rm(total); $('vCount').textContent = t('common.txCount', { n: sales.length });
+  $('vCash').textContent = rm(sum(cash, s => s.total)); $('vCashN').textContent = t('common.txCount', { n: cash.length });
+  $('vQr').textContent = rm(sum(qr, s => s.total)); $('vQrN').textContent = t('common.txCount', { n: qr.length });
   $('vAvg').textContent = rm(sales.length ? total / sales.length : 0);
-  $('vItems').textContent = sales.reduce((a, s) => a + s.items.reduce((x, it) => x + it.qty, 0), 0) + ' item terjual';
+  $('vItems').textContent = t('common.itemsSold', { n: sales.reduce((a, s) => a + s.items.reduce((x, it) => x + it.qty, 0), 0) });
   const adjusted = sales.filter(s => Math.abs(s.adj) > 0.001);
-  $('vAdj').textContent = rm(sum(adjusted, s => s.adj)).replace('RM-', '−RM'); $('vAdjN').textContent = adjusted.length + ' transaksi diubah';
+  $('vAdj').textContent = rm(sum(adjusted, s => s.adj)).replace('RM-', '−RM'); $('vAdjN').textContent = t('reports.adjCount', { n: adjusted.length });
   const max = sales.reduce((m, s) => (!m || s.total > m.total ? s : m), null);
-  $('vMax').textContent = rm(max ? max.total : 0); $('vMaxSub').textContent = max ? (multiDay() ? fmtShort(max.ts) + ' ' : '') + fmtTime(max.ts) + (max.method === 'qr' ? ' · QR' : ' · Tunai') : '—';
+  $('vMax').textContent = rm(max ? max.total : 0); $('vMaxSub').textContent = max ? (multiDay() ? fmtShort(max.ts) + ' ' : '') + fmtTime(max.ts) + (max.method === 'qr' ? ' · ' + t('common.qr') : ' · ' + t('common.cash')) : '—';
 
   // daily
   const days = {};
   sales.forEach(s => { const k = ymd(s.ts); const d = days[k] || (days[k] = { c: 0, q: 0, n: 0, ts: s.ts }); d[s.method === 'qr' ? 'q' : 'c'] += s.total; d.n++; });
   const keys = Object.keys(days).sort();
   const maxDay = Math.max(1, ...keys.map(k => days[k].c + days[k].q));
-  $('dailyPanel').querySelector('h2').textContent = multiDay() ? 'Jualan mengikut hari' : 'Jualan mengikut jam';
+  $('dailyTitle').textContent = multiDay() ? t('reports.byDay') : t('reports.byHour');
   if (!multiDay()) {           // single day → hourly bars
     const hours = {};
     sales.forEach(s => { const h = new Date(s.ts).getHours(); const d = hours[h] || (hours[h] = { c: 0, q: 0, n: 0 }); d[s.method === 'qr' ? 'q' : 'c'] += s.total; d.n++; });
     const hk = Object.keys(hours).map(Number).sort((a, b) => a - b), mh = Math.max(1, ...hk.map(h => hours[h].c + hours[h].q));
-    $('daily').innerHTML = hk.length ? hk.map(h => bar(`${String(h).padStart(2, '0')}:00–${String(h + 1).padStart(2, '0')}:00`, hours[h], mh)).join('') : `<div class="empty"><b>Tiada jualan</b>Tiada transaksi dalam tempoh ini.</div>`;
+    $('daily').innerHTML = hk.length ? hk.map(h => bar(`${String(h).padStart(2, '0')}:00–${String(h + 1).padStart(2, '0')}:00`, hours[h], mh)).join('') : `<div class="empty"><b>${t('reports.emptyChartTitle')}</b>${t('reports.emptyChartDesc')}</div>`;
   } else {
-    $('daily').innerHTML = keys.length ? keys.map(k => { const d = new Date(days[k].ts); return bar(`${DAYS[d.getDay()].slice(0, 3)} ${d.getDate()} ${MONTHS[d.getMonth()].slice(0, 3)}`, days[k], maxDay); }).join('') : `<div class="empty"><b>Tiada jualan</b>Tiada transaksi dalam tempoh ini.</div>`;
+    $('daily').innerHTML = keys.length ? keys.map(k => { const d = new Date(days[k].ts); return bar(`${DAYS[d.getDay()].slice(0, 3)} ${d.getDate()} ${MONTHS[d.getMonth()].slice(0, 3)}`, days[k], maxDay); }).join('') : `<div class="empty"><b>${t('reports.emptyChartTitle')}</b>${t('reports.emptyChartDesc')}</div>`;
   }
 
   // top items
   const agg = {};
   sales.forEach(s => s.items.forEach(it => { const a = agg[it.name] || (agg[it.name] = { qty: 0, amt: 0 }); a.qty += it.qty; a.amt += it.price * it.qty; }));
   const top = Object.entries(agg).sort((a, b) => b[1].qty - a[1].qty).slice(0, 10);
-  $('top').innerHTML = top.length ? top.map(([n, a]) => `<tr><td>${esc(n)}</td><td class="r">${a.qty}</td><td class="r">${rm(a.amt)}</td></tr>`).join('') : `<tr><td colspan="3" class="empty">Tiada data lagi.</td></tr>`;
+  $('top').innerHTML = top.length ? top.map(([n, a]) => `<tr><td>${esc(n)}</td><td class="r">${a.qty}</td><td class="r">${rm(a.amt)}</td></tr>`).join('') : `<tr><td colspan="3" class="empty">${t('reports.noItems')}</td></tr>`;
 
   renderRows();
 }
 function bar(label, d, max) {
-  const t = d.c + d.q, w = v => (100 * v / max).toFixed(1) + '%';
-  return `<div class="bar" title="Tunai ${rm(d.c)} · QR ${rm(d.q)} · ${d.n} transaksi"><span>${esc(label)}</span><div class="track"><div class="c" style="width:${w(d.c)}"></div><div class="q" style="width:${w(d.q)}"></div></div><span class="amt">${rm(t)}</span></div>`;
+  const t2 = d.c + d.q, w = v => (100 * v / max).toFixed(1) + '%';
+  return `<div class="bar" title="${t('common.cash')} ${rm(d.c)} · ${t('common.qr')} ${rm(d.q)} · ${t('common.txCount', { n: d.n })}"><span>${esc(label)}</span><div class="track"><div class="c" style="width:${w(d.c)}"></div><div class="q" style="width:${w(d.q)}"></div></div><span class="amt">${rm(t2)}</span></div>`;
 }
 function renderRows() {
   $('txCount').textContent = sales.length ? `${sales.length}` : '';
   const list = sales.slice(0, shown);
   $('rows').innerHTML = list.length ? list.map(s => `<tr class="tx" data-id="${esc(s.id)}">
       <td class="n">${fmtTime(s.ts)}${multiDay() ? `<small class="d">${fmtShort(s.ts)}</small>` : ''}</td>
-      <td class="items-cell">${esc(s.items.map(it => `${it.name} ×${it.qty}`).join(', ')) || '<em>tiada butiran item</em>'}${Math.abs(s.adj) > 0.001 ? `<span class="tag adj">${s.adj > 0 ? '+' : '−'}${rm(Math.abs(s.adj))}${s.note ? ' · ' + esc(s.note) : ''}</span>` : ''}</td>
-      <td class="n"><span class="tag ${s.method}">${s.method === 'qr' ? 'QR Pay' : 'Tunai'}</span></td>
+      <td class="items-cell">${esc(s.items.map(it => `${it.name} ×${it.qty}`).join(', ')) || `<em>${t('reports.noItemDetail')}</em>`}${Math.abs(s.adj) > 0.001 ? `<span class="tag adj">${s.adj > 0 ? '+' : '−'}${rm(Math.abs(s.adj))}${s.note ? ' · ' + esc(s.note) : ''}</span>` : ''}</td>
+      <td class="n"><span class="tag ${s.method}">${s.method === 'qr' ? t('common.qr') : t('common.cash')}</span></td>
       <td class="r"><b>${rm(s.total)}</b></td>
-    </tr>`).join('') : `<tr><td colspan="4" class="empty"><b>Tiada transaksi</b>Tiada jualan direkod dalam tempoh ini.</td></tr>`;
-  $('more').innerHTML = sales.length > shown ? `<button class="btn sm" id="moreBtn" type="button">Papar lagi (${sales.length - shown} lagi)</button>` : '';
+    </tr>`).join('') : `<tr><td colspan="4" class="empty"><b>${t('reports.emptyTxTitle')}</b>${t('reports.emptyTxDesc')}</td></tr>`;
+  $('more').innerHTML = sales.length > shown ? `<button class="btn sm" id="moreBtn" type="button">${t('reports.showMore', { n: sales.length - shown })}</button>` : '';
   const mb = $('moreBtn'); if (mb) mb.onclick = () => { shown += 200; renderRows(); };
 }
 $('rows').addEventListener('click', e => { const tr = e.target.closest('tr.tx'); if (!tr) return; const s = sales.find(x => x.id === tr.dataset.id); if (s) showDetail(s); });
 
 function showDetail(s) {
-  const m = H.modal(`<h3>Transaksi</h3><p>${fmtDate(s.ts)} · ${fmtTime(s.ts)} &nbsp;<span class="tag ${s.method}">${s.method === 'qr' ? 'QR Pay' : 'Tunai'}</span></p>
+  const m = H.modal(`<h3>${t('reports.detailTitle')}</h3><p>${fmtDate(s.ts)} · ${fmtTime(s.ts)} &nbsp;<span class="tag ${s.method}">${s.method === 'qr' ? t('common.qr') : t('common.cash')}</span></p>
     <div class="dl">
-      ${s.items.map(it => `<div><span>${esc(it.name)} × ${it.qty}${it.orig !== it.price ? ` <span class="tag adj">harga ubah</span>` : ''}</span><b>${rm(it.price * it.qty)}</b></div>`).join('') || '<div><span>Tiada butiran item</span><b></b></div>'}
+      ${s.items.map(it => `<div><span>${esc(it.name)} × ${it.qty}${it.orig !== it.price ? ` <span class="tag adj">${t('reports.priceChanged')}</span>` : ''}</span><b>${rm(it.price * it.qty)}</b></div>`).join('') || `<div><span>${t('reports.noItemDetail')}</span><b></b></div>`}
       <div class="sep"></div>
-      <div><span>Subtotal</span><b>${rm(s.subtotal)}</b></div>
-      ${Math.abs(s.adj) > 0.001 ? `<div><span>Pelarasan${s.note ? ' · ' + esc(s.note) : ''}</span><b>${s.adj > 0 ? '+' : '−'}${rm(Math.abs(s.adj))}</b></div>` : ''}
-      <div><span>Jumlah</span><b style="font-size:1.1rem">${rm(s.total)}</b></div>
-      <div><span>${s.method === 'qr' ? 'Diterima melalui QR' : 'Tunai diterima'}</span><b>${rm(s.paid)}</b></div>
-      ${s.method === 'cash' ? `<div><span>Baki</span><b>${rm(s.change)}</b></div>` : ''}
-      ${s.device ? `<div><span>Peranti</span><b>${esc(s.device)}</b></div>` : ''}
-      <div><span>ID</span><b style="font-size:.72rem;color:var(--muted)">${esc(s.id)}</b></div>
+      <div><span>${t('reports.subtotal')}</span><b>${rm(s.subtotal)}</b></div>
+      ${Math.abs(s.adj) > 0.001 ? `<div><span>${t('reports.adjustment')}${s.note ? ' · ' + esc(s.note) : ''}</span><b>${s.adj > 0 ? '+' : '−'}${rm(Math.abs(s.adj))}</b></div>` : ''}
+      <div><span>${t('reports.total')}</span><b style="font-size:1.1rem">${rm(s.total)}</b></div>
+      <div><span>${s.method === 'qr' ? t('reports.receivedQr') : t('reports.receivedCash')}</span><b>${rm(s.paid)}</b></div>
+      ${s.method === 'cash' ? `<div><span>${t('reports.change')}</span><b>${rm(s.change)}</b></div>` : ''}
+      ${s.device ? `<div><span>${t('reports.device')}</span><b>${esc(s.device)}</b></div>` : ''}
+      <div><span>${t('reports.id')}</span><b style="font-size:.72rem;color:var(--muted)">${esc(s.id)}</b></div>
     </div>
     <div class="actions">
-      <button class="btn sm" data-sw type="button">Tukar ke ${s.method === 'qr' ? 'Tunai' : 'QR Pay'}</button>
-      <button class="btn sm danger" data-del type="button">Padam transaksi</button>
-      <button class="btn sm primary" data-x type="button">Tutup</button>
+      <button class="btn sm" data-sw type="button">${t('reports.switchTo', { method: s.method === 'qr' ? t('common.cash') : t('common.qr') })}</button>
+      <button class="btn sm danger" data-del type="button">${t('reports.deleteTx')}</button>
+      <button class="btn sm primary" data-x type="button">${t('common.close')}</button>
     </div>`);
   m.back.querySelector('[data-x]').onclick = m.close;
   m.back.querySelector('[data-sw]').onclick = async () => {
     const to = s.method === 'qr' ? 'cash' : 'qr';
     m.close();
-    if (!await H.confirm({ title: 'Tukar kaedah bayaran?', text: `Transaksi ${rm(s.total)} akan direkod sebagai ${to === 'qr' ? 'QR Pay' : 'Tunai'}.`, ok: 'Tukar' })) return;
+    if (!await H.confirm({ title: t('reports.switchMethodTitle'), text: t('reports.switchMethodText', { amt: rm(s.total), method: to === 'qr' ? t('common.qr') : t('common.cash') }), ok: t('reports.switch') })) return;
     await KantinDB.updateSale(s.id, { method: to, paid: s.total, change: 0 });
-    toast('Kaedah bayaran ditukar', 'ok');
+    toast(t('reports.methodChanged'), 'ok');
   };
   m.back.querySelector('[data-del]').onclick = async () => {
     m.close();
-    if (!await H.confirm({ title: 'Padam transaksi ini?', text: `${rm(s.total)} pada ${fmtTime(s.ts)}, ${fmtShort(s.ts)}. Tindakan ini tidak boleh dibatalkan.`, ok: 'Padam', danger: true })) return;
+    if (!await H.confirm({ title: t('reports.deleteTxTitle'), text: t('reports.deleteTxText', { amt: rm(s.total), time: fmtTime(s.ts), date: fmtShort(s.ts) }), ok: t('common.delete'), danger: true })) return;
     await KantinDB.deleteSale(s.id);
-    toast('Transaksi dipadam', 'ok');
+    toast(t('reports.txDeleted'), 'ok');
   };
 }
 
