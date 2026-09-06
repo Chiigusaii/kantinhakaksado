@@ -1,5 +1,7 @@
 # Kantin Dapo Hakaksado — Sistem Kantin
 
+> **Kemas kini terkini (versi iPad):** Seluruh antara muka kini dibesarkan untuk tablet — butang, teks dan kad menu semuanya lebih besar dan lebih mudah ditekan dengan jari. Skrin bayaran kini **skrin penuh** dengan papan kekunci besar di sebelah kanan dan pilihan Tunai/QR di sebelah kiri, diikuti skrin **"Sukses!"** dengan Cetak Resit / Selesai. Tambahan baharu: **Tetapan → Saiz paparan** (Sederhana / Besar / Sangat besar) untuk melaraskan saiz seluruh sistem pada peranti itu sahaja. Semua fungsi asal (sync cloud, laporan, sandaran, bahasa) kekal sama.
+
 A small point-of-sale system for the canteen, hosted as plain files on GitHub Pages.
 
 | Page | File | What it does |
@@ -10,7 +12,7 @@ A small point-of-sale system for the canteen, hosted as plain files on GitHub Pa
 | Menu | `menu.html` | Add, rename, re-price, re-order and delete food/drink items and categories |
 | Tetapan | `settings.html` | Sync status, login, device name, backup / restore, setup checklist |
 
-Shared files: `app.css` (design), `db.js` (data layer), `config.js` (**your Firebase details go here**), `menu-default.js` (starting menu), `firestore.rules` (security rules to paste into Firebase).
+Shared files: `app.css` (design), `db.js` (data layer), `i18n.js` (Bahasa Melayu / English / 中文 text + language switch), `config.js` (**your Firebase details go here**), `menu-default.js` (starting menu), `firestore.rules` (security rules to paste into Firebase).
 
 ---
 
@@ -100,8 +102,29 @@ The device that has your **old sales data** in its browser will upload it automa
 
 **Tetapan** — give each device a name (recorded on every sale), download a full JSON backup (do this weekly — keep a copy somewhere safe), restore from JSON, reset the menu to `menu-default.js`.
 
-## 5. Notes
+## 5. Using it on an iPad
+
+The interface is built for a 10–13" iPad held in landscape at the counter.
+
+**Set the size once.** Open **Tetapan → Saiz paparan** and pick the option that feels right on the actual tablet:
+
+| Option | Button height | Best for |
+|---|---|---|
+| Sederhana | 60 px | Laptop or a large desktop screen |
+| Besar (default) | 67 px | iPad — the recommended setting |
+| Sangat besar | 75 px | A busy counter, or anyone who wants maximum certainty |
+
+The setting scales *everything* — text, buttons, padding, the menu photos — and is saved on that device only, like the language. Every phone, tablet and laptop can have its own.
+
+**Run it fullscreen.** In Safari, open the site → Share → **Add to Home Screen**. Launching from that icon hides the browser bars and gives you the whole screen, which is worth about one extra row of menu items.
+
+**Layout.** In landscape the order panel sits down the right-hand side. In portrait it becomes a bar along the bottom — tap it (or **Lihat pesanan**) to slide the full order up. Both work; landscape shows more food at once.
+
+**Guard against mis-taps.** Every control is at least 49 px tall, above Apple's 44 px minimum, and double-tap-to-zoom is switched off so a fast second tap registers as a second tap rather than a zoom. Tapping a menu item opens a confirmation panel with the quantity and price before anything is added, so a stray touch never silently rings up a sale.
+
+## 6. Notes
 * **Menu prices**: the starting list in `menu-default.js` is copied into the database the first time the system runs. Check every price on the **Menu** page before opening — after that the file is no longer used (unless you press *Tetapkan semula menu*).
+* **Gambar item menu**: photos are compressed and shrunk in the browser before saving, because the whole menu is stored as a single Firestore document with a 1 MB limit. This keeps things well within budget for a normal-sized menu, but if you photograph a very large number of items, prefer short/simple photos (or the "URL" option, which stores a link instead of the image itself) to leave more room.
 * **Test sales**: if you made practice sales before setting up the cloud, delete them in Laporan (or clear local data in Tetapan **before** adding `config.js`) so they are not uploaded as real sales.
 * **Cost**: Firebase's free plan allows 50,000 reads and 20,000 writes per day. A canteen uses a few hundred. No credit card is needed.
 * **Security**: only signed-in users can read or write. Never set `requireLogin: false` unless you also switch to the "open" rules in `firestore.rules`, and understand that anyone with the link could then change your data.
