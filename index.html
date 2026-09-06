@@ -2,7 +2,11 @@
 <html lang="ms">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="theme-color" content="#272833" />
 <title>Kantin Dapo Hakaksado — Sistem Kantin</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -10,54 +14,74 @@
 <link rel="stylesheet" href="app.css" />
 <style>
   /* ---------- sales summary ---------- */
-  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px}
-  .stat{background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:16px;padding:14px 18px;text-decoration:none;transition:background .2s;display:block}
-  .stat:hover{background:rgba(255,255,255,.09)}
-  .stat .label{font-size:.76rem;color:var(--muted);font-weight:700}
-  .stat .value{font-size:1.35rem;font-weight:800;margin-top:4px;font-variant-numeric:tabular-nums}
-  .stat .sub{font-size:.74rem;color:var(--muted);margin-top:2px}
-  .stat .split{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.6rem}
+  .stat{
+    background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:var(--r-lg);
+    padding:1.1rem 1.3rem;min-height:var(--tap-xl);text-decoration:none;display:block;
+    transition:background .2s,transform .25s var(--ease),box-shadow .25s
+  }
+  .stat:hover{background:rgba(255,255,255,.09);transform:translateY(-.25rem);box-shadow:0 .8rem 1.6rem rgba(0,0,0,.26)}
+  .stat:active{transform:scale(.98)}
+  .greet{font-size:.88rem;color:var(--muted);font-weight:700;margin-top:.2rem}
+  .stat .label{font-size:.85rem;color:var(--muted);font-weight:800}
+  .stat .value{font-size:1.75rem;font-weight:800;margin-top:.25rem;font-variant-numeric:tabular-nums}
+  .stat .sub{font-size:.82rem;color:var(--muted);margin-top:.15rem}
+  .stat .split{display:flex;gap:.4rem;margin-top:.6rem;flex-wrap:wrap}
 
   /* ---------- category cards ---------- */
-  .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+  .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.15rem}
   .card{
-    position:relative;isolation:isolate;border-radius:22px;padding:24px 22px;min-height:250px;
+    position:relative;isolation:isolate;border-radius:var(--r-xl);padding:1.6rem 1.4rem;min-height:16rem;
     display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden;text-decoration:none;color:#fff;
-    background:linear-gradient(160deg,var(--c1),var(--c2));box-shadow:0 14px 30px rgba(0,0,0,.28);
-    transition:transform .3s cubic-bezier(.2,.8,.2,1),box-shadow .3s;
-    animation:rise .55s cubic-bezier(.2,.8,.2,1) backwards;
+    background:linear-gradient(160deg,var(--c1),var(--c2));box-shadow:0 .9rem 1.9rem rgba(0,0,0,.28);
+    transition:transform .3s var(--ease),box-shadow .3s;
+    animation:rise .55s var(--ease) backwards;
   }
   .card:nth-child(2){animation-delay:.06s}.card:nth-child(3){animation-delay:.12s}.card:nth-child(4){animation-delay:.18s}
   .card:nth-child(5){animation-delay:.24s}.card:nth-child(6){animation-delay:.30s}.card:nth-child(7){animation-delay:.36s}
   .card:nth-child(n+8){animation-delay:.42s}
   @keyframes rise{from{opacity:0;transform:translateY(18px)}}
-  .card:hover{transform:translateY(-6px);box-shadow:0 22px 40px rgba(0,0,0,.36)}
+  .card:hover{transform:translateY(-.4rem);box-shadow:0 1.4rem 2.5rem rgba(0,0,0,.36)}
+  .card:active{transform:scale(.98)}
   .card::before{content:"";position:absolute;inset:0;z-index:-1;background:radial-gradient(circle at 78% 20%,rgba(255,255,255,.3),transparent 45%)}
-  .art{position:absolute;right:16px;top:14px;font-size:4.6rem;line-height:1;filter:drop-shadow(0 14px 16px rgba(0,0,0,.3))}
-  .card h2{font-size:1.12rem;font-weight:800;line-height:1.2;text-shadow:0 1px 2px rgba(0,0,0,.12)}
-  .card p{font-size:.8rem;line-height:1.5;opacity:.92;margin:6px 0 14px;max-width:24ch}
-  .card .go{align-self:flex-start;background:#fff;color:var(--ink);border-radius:999px;padding:9px 16px;font-size:.76rem;font-weight:800;box-shadow:0 4px 12px rgba(0,0,0,.15)}
-  .feature{grid-column:span 2;justify-content:center;padding:28px 220px 28px 30px}
+  .art{position:absolute;right:1rem;top:.9rem;font-size:5.4rem;line-height:1;filter:drop-shadow(0 .9rem 1rem rgba(0,0,0,.3));animation:bob 4.5s ease-in-out infinite}
+  @keyframes bob{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-7px) rotate(-3deg)}}
+  .card:hover .art{animation-play-state:paused;transform:translateY(-10px) scale(1.06)}
+  @media (prefers-reduced-motion:reduce){ .art{animation:none} }
+  .card h2{font-size:1.3rem;font-weight:800;line-height:1.2;text-shadow:0 1px 2px rgba(0,0,0,.12)}
+  .card p{font-size:.92rem;line-height:1.5;opacity:.92;margin:.4rem 0 1rem;max-width:24ch}
+  .card .go{
+    align-self:flex-start;background:#fff;color:var(--ink);border-radius:999px;
+    padding:.75rem 1.3rem;min-height:3.1rem;display:inline-flex;align-items:center;
+    font-size:.92rem;font-weight:800;box-shadow:0 .3rem .8rem rgba(0,0,0,.18)
+  }
+  .feature{grid-column:span 2;justify-content:center;padding:1.9rem 14rem 1.9rem 2rem}
   .feature::before{background:radial-gradient(circle at 80% 50%,rgba(255,255,255,.32),transparent 42%)}
-  .feature .art{font-size:9.5rem;right:34px;top:50%;transform:translateY(-50%)}
-  .feature h2{font-size:1.5rem}
-  .feature p{max-width:32ch;font-size:.86rem}
+  .feature .art{font-size:11rem;right:2rem;top:50%;transform:translateY(-50%);animation:bobFeature 4.5s ease-in-out infinite}
+  @keyframes bobFeature{0%,100%{transform:translateY(-50%) rotate(0deg)}50%{transform:translateY(-56%) rotate(-3deg)}}
+  .feature:hover .art{animation-play-state:paused;transform:translateY(-50%) scale(1.06)}
+  .feature h2{font-size:1.8rem}
+  .feature p{max-width:32ch;font-size:1rem}
   .sky{color:var(--ink)}
   .sky h2{text-shadow:none}
   .sky p{opacity:.8}
 
   /* ---------- notes ---------- */
-  .info{margin-top:26px;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:18px 22px;display:flex;gap:28px;flex-wrap:wrap;font-size:.84rem;color:var(--muted)}
-  .info div b{display:block;color:#fff;font-size:.78rem;margin-bottom:2px}
-
-  @media (max-width:1100px){
-    .grid,.stats{grid-template-columns:repeat(2,1fr)}
+  .info{
+    margin-top:1.7rem;background:var(--panel);border:1px solid var(--line);border-radius:var(--r-lg);
+    padding:1.2rem 1.5rem;display:flex;gap:2rem;flex-wrap:wrap;font-size:.92rem;color:var(--muted)
   }
-  @media (max-width:720px){
+  .info div b{display:block;color:#fff;font-size:.85rem;margin-bottom:.15rem}
+
+  @media (max-width:1200px){
+    .grid,.stats{grid-template-columns:repeat(2,1fr)}
+    .feature .art{font-size:9rem}
+  }
+  @media (max-width:760px){
     .grid{grid-template-columns:1fr}
-    .stats{grid-template-columns:repeat(2,1fr);gap:10px}
-    .feature{grid-column:auto;padding-right:150px}
-    .feature .art{font-size:6rem;right:16px}
+    .stats{grid-template-columns:repeat(2,1fr);gap:.7rem}
+    .feature{grid-column:auto;padding-right:9rem}
+    .feature .art{font-size:6rem;right:1rem}
   }
 </style>
 </head>
@@ -65,15 +89,15 @@
 <aside class="rail" aria-label="Navigasi">
   <nav>
     <a class="nav active" aria-current="page" href="index.html">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg>Utama</a>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg><span data-i18n="nav.home">Utama</span></a>
     <a class="nav" href="foodmenu.html">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6"/></svg>Kaunter</a>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6"/></svg><span data-i18n="nav.counter">Kaunter</span></a>
     <a class="nav" href="salesdata.html">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>Laporan</a>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg><span data-i18n="nav.reports">Laporan</span></a>
     <a class="nav" href="menu.html">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><circle cx="7" cy="7" r="1"/></svg>Menu</a>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><circle cx="7" cy="7" r="1"/></svg><span data-i18n="nav.menu">Menu</span></a>
     <a class="nav" href="settings.html">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Tetapan</a>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span data-i18n="nav.settings">Tetapan</span></a>
   </nav>
 </aside>
 
@@ -81,7 +105,8 @@
   <div class="head">
     <div>
       <div class="brand" id="brand">Kantin Dapo Hakaksado</div>
-      <h1><b>Menu</b> Kategori</h1>
+      <h1 data-i18n-html="home.title"><b>Menu</b> Kategori</h1>
+      <div class="greet" id="greet"></div>
     </div>
     <div class="head-right">
       <a id="syncBadge" class="sync" href="settings.html"><i></i>Memuatkan…</a>
@@ -90,37 +115,47 @@
   </div>
 
   <section class="stats" aria-label="Ringkasan jualan">
-    <a class="stat" href="salesdata.html?p=day"><div class="label">Jualan hari ini</div><div class="value" id="sToday">RM0.00</div><div class="sub" id="sTodayCount">0 transaksi</div><div class="split"><span class="tag cash" id="sTodayCash">Tunai RM0.00</span><span class="tag qr" id="sTodayQr">QR RM0.00</span></div></a>
-    <a class="stat" href="salesdata.html?p=week"><div class="label">Minggu ini</div><div class="value" id="sWeek">RM0.00</div><div class="sub" id="sWeekRange">—</div><div class="split"><span class="tag cash" id="sWeekCash">Tunai RM0.00</span><span class="tag qr" id="sWeekQr">QR RM0.00</span></div></a>
-    <a class="stat" href="salesdata.html?p=month"><div class="label">Bulan ini</div><div class="value" id="sMonth">RM0.00</div><div class="sub" id="sMonthName">—</div><div class="split"><span class="tag cash" id="sMonthCash">Tunai RM0.00</span><span class="tag qr" id="sMonthQr">QR RM0.00</span></div></a>
-    <a class="stat" href="salesdata.html?p=day"><div class="label">Transaksi terakhir</div><div class="value" id="sLast">—</div><div class="sub" id="sLastAmt">Belum ada jualan</div><div class="split" id="sLastTag"></div></a>
+    <a class="stat" href="salesdata.html?p=day"><div class="label" data-i18n="home.statToday">Jualan hari ini</div><div class="value" id="sToday">RM0.00</div><div class="sub" id="sTodayCount">0 transaksi</div><div class="split"><span class="tag cash" id="sTodayCash">Tunai RM0.00</span><span class="tag qr" id="sTodayQr">QR RM0.00</span></div></a>
+    <a class="stat" href="salesdata.html?p=week"><div class="label" data-i18n="home.statWeek">Minggu ini</div><div class="value" id="sWeek">RM0.00</div><div class="sub" id="sWeekRange">—</div><div class="split"><span class="tag cash" id="sWeekCash">Tunai RM0.00</span><span class="tag qr" id="sWeekQr">QR RM0.00</span></div></a>
+    <a class="stat" href="salesdata.html?p=month"><div class="label" data-i18n="home.statMonth">Bulan ini</div><div class="value" id="sMonth">RM0.00</div><div class="sub" id="sMonthName">—</div><div class="split"><span class="tag cash" id="sMonthCash">Tunai RM0.00</span><span class="tag qr" id="sMonthQr">QR RM0.00</span></div></a>
+    <a class="stat" href="salesdata.html?p=day"><div class="label" data-i18n="home.statLast">Transaksi terakhir</div><div class="value" id="sLast">—</div><div class="sub" id="sLastAmt" data-i18n="home.noSalesYet">Belum ada jualan</div><div class="split" id="sLastTag"></div></a>
   </section>
 
   <nav class="grid" id="grid" aria-label="Menu utama">
     <a class="card feature" href="foodmenu.html" style="--c1:#f79a3f;--c2:#e8560a">
       <span class="art" aria-hidden="true">🍛</span>
-      <h2>Kaunter Bayaran</h2>
-      <p>Klik makanan yang dipilih pelanggan dan jumlah dikira automatik. Terima tunai atau QR, baki keluar serta-merta.</p>
-      <span class="go">Buka Kaunter</span>
+      <h2 data-i18n="home.counterCardTitle">Kaunter Bayaran</h2>
+      <p data-i18n="home.counterCardDesc">Klik makanan yang dipilih pelanggan dan jumlah dikira automatik. Terima tunai atau QR, baki keluar serta-merta.</p>
+      <span class="go" data-i18n="home.openCounter">Buka Kaunter</span>
     </a>
   </nav>
 
   <section class="info" aria-label="Maklumat kantin">
-    <div><b>Waktu operasi</b>7.00 pagi – 3.00 petang</div>
-    <div><b>Pesanan</b>Sila beratur dan bayar sebelum makan</div>
-    <div id="storageNote"><b>Simpanan data</b>Memuatkan…</div>
+    <div><b data-i18n="home.hours">Waktu operasi</b><span data-i18n="home.hoursValue">7.00 pagi – 3.00 petang</span></div>
+    <div><b data-i18n="home.orderNote">Pesanan</b><span data-i18n="home.orderNoteValue">Sila beratur dan bayar sebelum makan</span></div>
+    <div id="storageNote"><b data-i18n="home.storageNote">Simpanan data</b>Memuatkan…</div>
   </section>
 
-  <footer>Terima kasih kerana membeli di kantin kami. Sila datang lagi.</footer>
+  <footer data-i18n="home.footer">Terima kasih kerana membeli di kantin kami. Sila datang lagi.</footer>
 </main>
 
 <script src="config.js"></script>
 <script src="menu-default.js"></script>
+<script src="i18n.js"></script>
 <script src="db.js"></script>
 <script>
 const { rm, money, esc, MONTHS, startOfDay, startClock, fmtTime, ymd } = KantinDB.h;
+const { t } = I18N;
 startClock('today', 'now');
 document.getElementById('brand').textContent = KantinDB.state.shopName;
+
+function renderGreeting() {
+  const h = new Date().getHours();
+  const key = h < 12 ? 'home.greetMorning' : h < 18 ? 'home.greetAfternoon' : 'home.greetEvening';
+  document.getElementById('greet').textContent = t(key) + ' 👋';
+}
+renderGreeting();
+setInterval(renderGreeting, 60000);
 
 const shown = {};                       // current displayed numbers, so the count-up animates from where it is
 function countUp(id, target) {
@@ -138,9 +173,9 @@ function countUp(id, target) {
 const DISPLAY_NAME = { 'Lauk (Ikan & Ayam)': 'Lauk Ikan & Ayam', 'Minuman (Panas / Sejuk)': 'Minuman Panas & Sejuk' };
 function describe(items) {
   const names = items.map(i => i.name.toLowerCase());
-  if (!names.length) return 'Belum ada item. Tambah di halaman Menu.';
+  if (!names.length) return t('home.noItemsDesc');
   const head = names.slice(0, 5), more = names.length > 5;
-  let s = head.length === 1 ? head[0] : head.slice(0, -1).join(', ') + (more ? ', ' + head[head.length - 1] + ' dan lain-lain' : ' dan ' + head[head.length - 1]);
+  let s = head.length === 1 ? head[0] : head.slice(0, -1).join(', ') + (more ? ', ' + head[head.length - 1] + t('common.andMore') : t('common.and') + head[head.length - 1]);
   return s.charAt(0).toUpperCase() + s.slice(1) + '.';
 }
 function renderCards(menu) {
@@ -153,7 +188,7 @@ function renderCards(menu) {
       <span class="art" aria-hidden="true">${st.emoji}</span>
       <h2>${esc(DISPLAY_NAME[cat] || cat)}</h2>
       <p>${esc(describe(byCat[cat] || []))}</p>
-      <span class="go">Lihat Menu</span></a>`;
+      <span class="go">${t('home.viewMenu')}</span></a>`;
   }).join(''));
 }
 
@@ -175,13 +210,13 @@ function renderStats(sales) {
   const week = split(sales.filter(s => s.ts >= +startWeek));
   const month = split(sales.filter(s => s.ts >= +startMonth));
   countUp('sToday', day.total); countUp('sWeek', week.total); countUp('sMonth', month.total);
-  document.getElementById('sTodayCount').textContent = day.n + ' transaksi';
-  document.getElementById('sTodayCash').textContent = 'Tunai ' + rm(day.cash);
-  document.getElementById('sTodayQr').textContent = 'QR ' + rm(day.qr);
-  document.getElementById('sWeekCash').textContent = 'Tunai ' + rm(week.cash);
-  document.getElementById('sWeekQr').textContent = 'QR ' + rm(week.qr);
-  document.getElementById('sMonthCash').textContent = 'Tunai ' + rm(month.cash);
-  document.getElementById('sMonthQr').textContent = 'QR ' + rm(month.qr);
+  document.getElementById('sTodayCount').textContent = t('common.txCount', { n: day.n });
+  document.getElementById('sTodayCash').textContent = t('common.cash') + ' ' + rm(day.cash);
+  document.getElementById('sTodayQr').textContent = t('common.qr') + ' ' + rm(day.qr);
+  document.getElementById('sWeekCash').textContent = t('common.cash') + ' ' + rm(week.cash);
+  document.getElementById('sWeekQr').textContent = t('common.qr') + ' ' + rm(week.qr);
+  document.getElementById('sMonthCash').textContent = t('common.cash') + ' ' + rm(month.cash);
+  document.getElementById('sMonthQr').textContent = t('common.qr') + ' ' + rm(month.qr);
   const endWeek = new Date(startWeek); endWeek.setDate(startWeek.getDate() + 6);
   document.getElementById('sWeekRange').textContent = `${startWeek.getDate()} ${MONTHS[startWeek.getMonth()].slice(0, 3)} – ${endWeek.getDate()} ${MONTHS[endWeek.getMonth()].slice(0, 3)}`;
   document.getElementById('sMonthName').textContent = MONTHS[now.getMonth()] + ' ' + now.getFullYear();
@@ -190,13 +225,14 @@ function renderStats(sales) {
 function renderLast(last) {
   if (!last) return;
   document.getElementById('sLast').textContent = fmtTime(last.ts);
-  document.getElementById('sLastAmt').textContent = rm(last.total) + ' pada ' + new Date(last.ts).toLocaleDateString('en-GB');
-  document.getElementById('sLastTag').innerHTML = `<span class="tag ${last.method}">${last.method === 'qr' ? 'QR Pay' : 'Tunai'}</span>`;
+  document.getElementById('sLastAmt').textContent = rm(last.total) + ' ' + new Date(last.ts).toLocaleDateString('en-GB');
+  document.getElementById('sLastTag').innerHTML = `<span class="tag ${last.method}">${last.method === 'qr' ? t('common.qr') : t('common.cash')}</span>`;
 }
 function renderStorageNote(st) {
   const el = document.getElementById('storageNote');
-  if (st.mode === 'cloud') el.innerHTML = '<b>Simpanan data</b>Data jualan disegerakkan ke cloud dan sama pada semua peranti. Buat sandaran di halaman Tetapan sekali-sekala.';
-  else el.innerHTML = '<b>Simpanan data</b>Data jualan disimpan dalam pelayar ini sahaja. Untuk segerak semua peranti, sediakan cloud di halaman <a href="settings.html">Tetapan</a>. Buat backup CSV di halaman Laporan setiap hari.';
+  const label = `<b>${t('home.storageNote')}</b>`;
+  if (st.mode === 'cloud') el.innerHTML = label + t('home.storageCloud');
+  else el.innerHTML = label + t('home.storageLocalPrefix') + `<a href="settings.html">${t('home.storageLocalLink')}</a>` + t('home.storageLocalSuffix');
 }
 
 KantinDB.onState(renderStorageNote);
