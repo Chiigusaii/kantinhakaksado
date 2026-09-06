@@ -2,50 +2,58 @@
 <html lang="ms">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="theme-color" content="#272833" />
 <title>Tetapan — Kantin Dapo Hakaksado</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="app.css" />
 <style>
-  .cols{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-  .panel+.panel,.cols+.panel,.cols+.cols{margin-top:16px}
-  .kv{display:grid;grid-template-columns:150px 1fr;gap:8px 14px;font-size:.86rem;align-items:center}
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+  .panel+.panel,.cols+.panel,.cols+.cols{margin-top:1rem}
+  .kv{display:grid;grid-template-columns:11rem 1fr;gap:.6rem 1rem;font-size:.95rem;align-items:center}
   .kv span{color:var(--muted);font-weight:700}
   .kv b{font-weight:700;overflow-wrap:anywhere}
-  .dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--muted);margin-right:8px;vertical-align:1px}
+  .dot{display:inline-block;width:.65rem;height:.65rem;border-radius:50%;background:var(--muted);margin-right:.5rem;vertical-align:1px}
   .dot.ok{background:var(--green)}.dot.warn{background:var(--orange-2)}.dot.err{background:var(--red)}
-  .msg{margin-top:12px;padding:10px 14px;border-radius:12px;font-size:.84rem;line-height:1.5;background:rgba(255,255,255,.05);border:1px solid var(--line)}
+  .msg{
+    margin-top:.9rem;padding:.85rem 1.1rem;border-radius:var(--r-md);font-size:.95rem;line-height:1.55;
+    background:rgba(255,255,255,.05);border:1px solid var(--line)
+  }
   .msg.ok{background:rgba(62,207,142,.1);border-color:rgba(62,207,142,.3)}
   .msg.err{background:rgba(240,98,92,.1);border-color:rgba(240,98,92,.3)}
-  .panel p{color:var(--muted);font-size:.84rem;line-height:1.55}
-  .panel .row{margin-top:12px}
-  .loginform{display:flex;flex-direction:column;gap:10px;margin-top:12px}
-  ol.steps{margin:10px 0 0 18px;font-size:.86rem;line-height:1.6;color:var(--text)}
-  ol.steps li{margin-bottom:8px}
+  .panel p{color:var(--muted);font-size:.95rem;line-height:1.6}
+  .panel .row{margin-top:.9rem}
+  .loginform{display:flex;flex-direction:column;gap:.7rem;margin-top:.9rem}
+  ol.steps{margin:.8rem 0 0 1.3rem;font-size:.95rem;line-height:1.65;color:var(--text)}
+  ol.steps li{margin-bottom:.6rem}
   ol.steps li b{color:#fff}
-  code{background:rgba(0,0,0,.28);border:1px solid var(--line);border-radius:6px;padding:1px 6px;font-size:.8rem;font-family:ui-monospace,Menlo,Consolas,monospace}
-  pre{background:rgba(0,0,0,.28);border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-size:.76rem;overflow:auto;font-family:ui-monospace,Menlo,Consolas,monospace;line-height:1.5;margin-top:8px}
-  details summary{cursor:pointer;font-weight:800;font-size:.9rem;list-style:none;display:flex;align-items:center;gap:8px}
+  code{background:rgba(0,0,0,.28);border:1px solid var(--line);border-radius:.4rem;padding:.1rem .4rem;font-size:.88rem;font-family:ui-monospace,Menlo,Consolas,monospace}
+  pre{background:rgba(0,0,0,.28);border:1px solid var(--line);border-radius:var(--r-md);padding:.9rem 1rem;font-size:.85rem;overflow:auto;font-family:ui-monospace,Menlo,Consolas,monospace;line-height:1.55;margin-top:.6rem}
+  details summary{cursor:pointer;font-weight:800;font-size:1.05rem;list-style:none;display:flex;align-items:center;gap:.6rem;min-height:var(--tap);padding:.3rem 0}
+  details summary::-webkit-details-marker{display:none}
   details summary::before{content:"▸";color:var(--orange-2);transition:transform .2s}
   details[open] summary::before{transform:rotate(90deg)}
-  @media (max-width:900px){ .cols{grid-template-columns:1fr} .kv{grid-template-columns:120px 1fr} }
+  @media (max-width:1000px){ .cols{grid-template-columns:1fr} .kv{grid-template-columns:9rem 1fr} }
 </style>
 </head>
 <body>
 <aside class="rail" aria-label="Navigasi">
   <nav>
     <a class="nav" href="index.html">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg>Utama</a>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg><span data-i18n="nav.home">Utama</span></a>
     <a class="nav" href="foodmenu.html">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6"/></svg>Kaunter</a>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6"/></svg><span data-i18n="nav.counter">Kaunter</span></a>
     <a class="nav" href="salesdata.html">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>Laporan</a>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg><span data-i18n="nav.reports">Laporan</span></a>
     <a class="nav" href="menu.html">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><circle cx="7" cy="7" r="1"/></svg>Menu</a>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><circle cx="7" cy="7" r="1"/></svg><span data-i18n="nav.menu">Menu</span></a>
     <a class="nav active" aria-current="page" href="settings.html">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Tetapan</a>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span data-i18n="nav.settings">Tetapan</span></a>
   </nav>
 </aside>
 
@@ -53,7 +61,7 @@
   <div class="head">
     <div>
       <div class="brand" id="brand">Kantin Dapo Hakaksado</div>
-      <h1><b>Tetapan</b> &amp; Penyegerakan</h1>
+      <h1 data-i18n-html="settingsPage.title"><b>Tetapan</b> &amp; Penyegerakan</h1>
     </div>
     <div class="head-right">
       <a id="syncBadge" class="sync" href="settings.html"><i></i>Memuatkan…</a>
@@ -63,55 +71,67 @@
 
   <div class="cols">
     <section class="panel">
-      <h2>Status penyegerakan</h2>
+      <h2 data-i18n="settingsPage.syncStatus">Status penyegerakan</h2>
       <div class="kv" id="kv"></div>
       <div id="loginBox"></div>
       <div class="row">
-        <button class="btn sm" id="testBtn" type="button">Uji sambungan</button>
-        <button class="btn sm" id="logoutBtn" type="button" hidden>Log keluar</button>
-        <button class="btn sm" id="reloadBtn" type="button">Muat semula halaman</button>
+        <button class="btn sm" id="testBtn" type="button" data-i18n="settingsPage.testConn">Uji sambungan</button>
+        <button class="btn sm" id="logoutBtn" type="button" hidden data-i18n="settingsPage.logout">Log keluar</button>
+        <button class="btn sm" id="reloadBtn" type="button" data-i18n="settingsPage.reload">Muat semula halaman</button>
       </div>
       <div class="msg" id="testMsg" hidden></div>
     </section>
 
     <section class="panel">
-      <h2>Peranti ini</h2>
-      <p>Nama peranti direkod pada setiap transaksi supaya anda tahu kaunter mana yang membuat jualan.</p>
+      <h2 data-i18n="settingsPage.deviceTitle">Peranti ini</h2>
+      <p data-i18n="settingsPage.deviceDesc">Nama peranti direkod pada setiap transaksi supaya anda tahu kaunter mana yang membuat jualan.</p>
       <div class="row" style="align-items:flex-end">
-        <label class="field" style="flex:1;min-width:200px">Nama peranti<input class="input" id="deviceName" type="text" placeholder="cth. Tablet kaunter 1" maxlength="40"></label>
-        <button class="btn sm" id="saveDevice" type="button">Simpan</button>
+        <label class="field" style="flex:1;min-width:200px" data-i18n="settingsPage.deviceNameLabel">Nama peranti<input class="input" id="deviceName" type="text" data-i18n-placeholder="settingsPage.deviceNamePlaceholder" placeholder="cth. Tablet kaunter 1" maxlength="40"></label>
+        <button class="btn sm" id="saveDevice" type="button" data-i18n="common.save">Simpan</button>
       </div>
       <div id="localBox" style="margin-top:16px"></div>
     </section>
   </div>
 
+  <section class="panel" style="margin-top:16px">
+    <h2 data-i18n="settingsPage.langTitle">Bahasa</h2>
+    <p data-i18n="settingsPage.langDesc">Pilih bahasa paparan untuk peranti ini. Tetapan ini disimpan pada peranti sahaja.</p>
+    <div class="langgrid" id="langGrid"></div>
+  </section>
+
+  <section class="panel" style="margin-top:16px">
+    <h2 data-i18n="settingsPage.sizeTitle">Saiz paparan</h2>
+    <p data-i18n="settingsPage.sizeDesc">Besarkan teks dan butang supaya lebih mudah ditekan pada tablet. Tetapan ini disimpan pada peranti ini sahaja.</p>
+    <div class="langgrid" id="sizeGrid"></div>
+  </section>
+
   <div class="cols">
     <section class="panel">
-      <h2>Sandaran data</h2>
-      <p>Muat turun sandaran penuh (menu + semua transaksi) sekali-sekala dan simpan di tempat selamat. Fail JSON boleh dipulihkan semula di sini; CSV boleh dibuka dalam Excel.</p>
+      <h2 data-i18n="settingsPage.backupTitle">Sandaran data</h2>
+      <p data-i18n="settingsPage.backupDesc">Muat turun sandaran penuh (menu + semua transaksi) sekali-sekala dan simpan di tempat selamat. Fail JSON boleh dipulihkan semula di sini; CSV boleh dibuka dalam Excel.</p>
       <div class="row">
-        <button class="btn sm primary" id="backupJson" type="button">Muat turun sandaran (JSON)</button>
-        <button class="btn sm" id="backupCsv" type="button">Muat turun semua transaksi (CSV)</button>
+        <button class="btn sm primary" id="backupJson" type="button" data-i18n="settingsPage.downloadJson">Muat turun sandaran (JSON)</button>
+        <button class="btn sm" id="backupCsv" type="button" data-i18n="settingsPage.downloadCsv">Muat turun semua transaksi (CSV)</button>
       </div>
       <div class="row" style="align-items:flex-end">
-        <label class="field" style="flex:1;min-width:220px">Pulihkan dari fail JSON<input class="input" id="restoreFile" type="file" accept="application/json,.json"></label>
-        <button class="btn sm" id="restoreBtn" type="button">Pulihkan</button>
+        <label class="field" style="flex:1;min-width:220px" data-i18n="settingsPage.restoreLabel">Pulihkan dari fail JSON<input class="input" id="restoreFile" type="file" accept="application/json,.json"></label>
+        <button class="btn sm" id="restoreBtn" type="button" data-i18n="settingsPage.restoreBtn">Pulihkan</button>
       </div>
       <div class="msg" id="restoreMsg" hidden></div>
     </section>
 
     <section class="panel">
-      <h2>Tindakan lain</h2>
-      <p><b style="color:#fff">Tetapkan semula menu</b> — gantikan menu semasa dengan senarai dalam fail <code>menu-default.js</code>. Rekod jualan tidak terjejas.</p>
-      <div class="row"><button class="btn sm danger" id="resetMenu" type="button">Tetapkan semula menu ke lalai</button></div>
-      <p style="margin-top:16px"><b style="color:#fff">Padam data tempatan pelayar ini</b> — hanya untuk pelayar ini; data cloud tidak dipadam. Pastikan data lama telah dimuat naik ke cloud atau disandarkan dahulu.</p>
-      <div class="row"><button class="btn sm danger" id="clearLocal" type="button">Padam data tempatan</button></div>
+      <h2 data-i18n="settingsPage.otherActions">Tindakan lain</h2>
+      <p data-i18n-html="settingsPage.resetMenuDesc"><b style="color:#fff">Tetapkan semula menu</b> — gantikan menu semasa dengan senarai dalam fail <code>menu-default.js</code>. Rekod jualan tidak terjejas.</p>
+      <div class="row"><button class="btn sm danger" id="resetMenu" type="button" data-i18n="settingsPage.resetMenuBtn">Tetapkan semula menu ke lalai</button></div>
+      <p style="margin-top:16px" data-i18n-html="settingsPage.clearLocalDesc"><b style="color:#fff">Padam data tempatan pelayar ini</b> — hanya untuk pelayar ini; data cloud tidak dipadam. Pastikan data lama telah dimuat naik ke cloud atau disandarkan dahulu.</p>
+      <div class="row"><button class="btn sm danger" id="clearLocal" type="button" data-i18n="settingsPage.clearLocalBtn">Padam data tempatan</button></div>
     </section>
   </div>
 
   <section class="panel">
     <details id="guide">
-      <summary>Panduan: segerakkan data ke semua peranti (Firebase, percuma)</summary>
+      <summary data-i18n="settingsPage.guideSummary">Panduan: segerakkan data ke semua peranti (Firebase, percuma)</summary>
       <p style="margin-top:10px">Laman ini dihoskan di GitHub Pages (fail statik), jadi data tidak boleh dikongsi antara peranti tanpa pangkalan data. Firebase Firestore (percuma) digunakan untuk itu. Panduan penuh dalam bahasa Inggeris: fail <code>README.md</code> dalam repositori GitHub anda.</p>
       <ol class="steps">
         <li><b>Cipta projek Firebase</b> — pergi ke <a href="https://console.firebase.google.com" target="_blank" rel="noopener">console.firebase.google.com</a> › <em>Add project</em>. Matikan Google Analytics.</li>
@@ -128,81 +148,125 @@
 
 <script src="config.js"></script>
 <script src="menu-default.js"></script>
+<script src="i18n.js"></script>
 <script src="db.js"></script>
 <script>
 const H = KantinDB.h, { rm, esc, startClock, toast, ymd, fmtTime, csv } = H;
+const { t } = I18N;
 startClock('today', 'now');
 document.getElementById('brand').textContent = KantinDB.state.shopName;
 const $ = id => document.getElementById(id);
 const st = KantinDB.state;
 
+/* ---------------- language switcher */
+function renderLangGrid() {
+  $('langGrid').innerHTML = I18N.supported.map(code => {
+    const meta = I18N.meta[code];
+    return `<button type="button" class="lang-opt${code === I18N.lang ? ' active' : ''}" data-lang="${code}">
+      <span class="flag">${meta.flag}</span><b>${esc(meta.label)}</b><small>${esc(meta.sub)}</small>
+    </button>`;
+  }).join('');
+}
+$('langGrid').addEventListener('click', e => {
+  const b = e.target.closest('[data-lang]'); if (!b) return;
+  const code = b.dataset.lang; if (code === I18N.lang) return;
+  I18N.setLang(code); renderLangGrid();
+  toast(t('settingsPage.langChanged'), 'ok');
+  setTimeout(() => location.reload(), 550);
+});
+renderLangGrid();
+
+/* ---------------- display size (this device only) */
+const SIZE_META = {
+  m: { icon: 'A', size: '1.15rem', key: 'settingsPage.sizeM', sub: 'settingsPage.sizeMSub' },
+  l: { icon: 'A', size: '1.7rem', key: 'settingsPage.sizeL', sub: 'settingsPage.sizeLSub' },
+  xl: { icon: 'A', size: '2.3rem', key: 'settingsPage.sizeXL', sub: 'settingsPage.sizeXLSub' }
+};
+function renderSizeGrid() {
+  const cur = KantinDB.scale.get();
+  $('sizeGrid').innerHTML = KantinDB.scale.options.map(code => {
+    const meta = SIZE_META[code];
+    return `<button type="button" class="lang-opt${code === cur ? ' active' : ''}" data-size="${code}">
+      <span class="flag" style="font-size:${meta.size};font-weight:800;line-height:1.1">${meta.icon}</span>
+      <b>${esc(t(meta.key))}</b><small>${esc(t(meta.sub))}</small>
+    </button>`;
+  }).join('');
+}
+$('sizeGrid').addEventListener('click', e => {
+  const b = e.target.closest('[data-size]'); if (!b) return;
+  const code = b.dataset.size; if (code === KantinDB.scale.get()) return;
+  KantinDB.scale.set(code); renderSizeGrid();
+  toast(t('settingsPage.sizeChanged'), 'ok');
+});
+renderSizeGrid();
+
 function renderStatus() {
   const rows = [];
   const dot = (cls, txt) => `<i class="dot ${cls}"></i>${esc(txt)}`;
   if (st.mode === 'local') {
-    rows.push(['Mod', dot(st.configured ? 'err' : 'warn', st.configured ? 'Tempatan (cloud gagal dimuatkan)' : 'Tempatan — data dalam pelayar ini sahaja')]);
-    if (st.configured && st.errorDetail) rows.push(['Ralat', esc(st.errorDetail)]);
-    if (!st.configured) rows.push(['Cloud', 'Belum disediakan — isi <code>config.js</code> (lihat panduan di bawah)']);
+    rows.push([t('settingsPage.statusMode'), dot(st.configured ? 'err' : 'warn', st.configured ? t('settingsPage.statusLocalFailed') : t('settingsPage.statusLocalOnly'))]);
+    if (st.configured && st.errorDetail) rows.push([t('settingsPage.statusError'), esc(st.errorDetail)]);
+    if (!st.configured) rows.push([t('settingsPage.statusCloud'), t('settingsPage.statusCloudNotSet')]);
   } else {
-    rows.push(['Mod', dot(st.ready ? 'ok' : 'warn', st.ready ? 'Cloud — dikongsi semua peranti' : 'Menyambung…')]);
-    rows.push(['Projek Firebase', esc(st.project)]);
-    if (st.requireLogin) rows.push(['Log masuk', st.user ? dot('ok', st.user.email) : dot('err', 'Belum log masuk')]);
-    else rows.push(['Log masuk', dot('warn', 'Dimatikan (requireLogin: false)')]);
-    rows.push(['Internet', dot(st.online ? 'ok' : 'warn', st.online ? 'Dalam talian' : 'Luar talian — perubahan disimpan & dihantar kemudian')]);
-    rows.push(['Cache luar talian', dot(st.persistence ? 'ok' : 'warn', st.persistence ? 'Aktif' : 'Tidak aktif (pelayar ini tidak menyokong / tab lain terbuka)')]);
-    rows.push(['Menunggu hantar', st.pending ? dot('warn', st.pending + ' perubahan') : dot('ok', 'Tiada')]);
-    if (st.error && st.error !== 'sdk') rows.push(['Ralat terakhir', dot('err', st.error + (st.errorDetail ? ' — ' + st.errorDetail : ''))]);
+    rows.push([t('settingsPage.statusMode'), dot(st.ready ? 'ok' : 'warn', st.ready ? t('settingsPage.statusCloudShared') : t('settingsPage.statusConnecting'))]);
+    rows.push([t('settingsPage.statusProject'), esc(st.project)]);
+    if (st.requireLogin) rows.push([t('settingsPage.statusLogin'), st.user ? dot('ok', st.user.email) : dot('err', t('settingsPage.statusNotLoggedIn'))]);
+    else rows.push([t('settingsPage.statusLogin'), dot('warn', t('settingsPage.statusLoginOff'))]);
+    rows.push([t('settingsPage.statusInternet'), dot(st.online ? 'ok' : 'warn', st.online ? t('settingsPage.statusOnline') : t('settingsPage.statusOffline'))]);
+    rows.push([t('settingsPage.statusOfflineCache'), dot(st.persistence ? 'ok' : 'warn', st.persistence ? t('settingsPage.statusActive') : t('settingsPage.statusInactive'))]);
+    rows.push([t('settingsPage.statusPending'), st.pending ? dot('warn', t('settingsPage.statusPendingCount', { n: st.pending })) : dot('ok', t('settingsPage.statusNone'))]);
+    if (st.error && st.error !== 'sdk') rows.push([t('settingsPage.statusLastError'), dot('err', st.error + (st.errorDetail ? ' — ' + st.errorDetail : ''))]);
   }
   $('kv').innerHTML = rows.map(([k, v]) => `<span>${k}</span><b>${v}</b>`).join('');
   $('logoutBtn').hidden = !(st.mode === 'cloud' && st.requireLogin && st.user);
   $('loginBox').innerHTML = (st.mode === 'cloud' && st.ready && st.requireLogin && !st.user) ? `
     <form class="loginform" id="loginForm">
-      <label class="field">E-mel<input class="input" name="email" type="email" autocomplete="username" required></label>
-      <label class="field">Kata laluan<input class="input" name="pass" type="password" autocomplete="current-password" required></label>
+      <label class="field">${t('settingsPage.loginEmail')}<input class="input" name="email" type="email" autocomplete="username" required></label>
+      <label class="field">${t('settingsPage.loginPass')}<input class="input" name="pass" type="password" autocomplete="current-password" required></label>
       <div class="msg err" id="loginErr" hidden></div>
-      <button class="btn primary" type="submit">Log masuk</button>
+      <button class="btn primary" type="submit">${t('settingsPage.loginBtn')}</button>
     </form>` : '';
   const lf = $('loginForm');
   if (lf) lf.onsubmit = async e => {
     e.preventDefault(); const b = lf.querySelector('button'); b.disabled = true;
-    try { await KantinDB.login(lf.email.value, lf.pass.value); toast('Berjaya log masuk', 'ok'); location.reload(); }
+    try { await KantinDB.login(lf.email.value, lf.pass.value); toast(t('settingsPage.loginSuccess'), 'ok'); location.reload(); }
     catch (err) { const m = $('loginErr'); m.hidden = false; m.textContent = KantinDB.authMessage(err); b.disabled = false; }
   };
   renderLocalBox();
 }
 function renderLocalBox() {
   const n = KantinDB.localSalesCount(), pend = KantinDB.pendingLocalCount();
-  let html = `<div class="kv"><span>Transaksi tempatan</span><b>${n} transaksi dalam pelayar ini</b></div>`;
+  let html = `<div class="kv"><span>${t('settingsPage.localTx')}</span><b>${t('settingsPage.localTxCount', { n })}</b></div>`;
   if (st.mode === 'cloud' && n) {
     html += pend
-      ? `<div class="msg">${pend} transaksi lama dalam pelayar ini belum disahkan berada di cloud.<div class="row"><button class="btn sm primary" id="migrateBtn" type="button">Muat naik ke cloud sekarang</button></div></div>`
-      : `<div class="msg ok">Semua transaksi lama pelayar ini telah dimuat naik ke cloud.</div>`;
+      ? `<div class="msg">${t('settingsPage.localPending', { n: pend })}<div class="row"><button class="btn sm primary" id="migrateBtn" type="button">${t('settingsPage.migrateBtn')}</button></div></div>`
+      : `<div class="msg ok">${t('settingsPage.allUploaded')}</div>`;
   }
   $('localBox').innerHTML = html;
   const mb = $('migrateBtn');
   if (mb) mb.onclick = async () => {
-    mb.disabled = true; mb.textContent = 'Memuat naik…';
-    try { const r = await KantinDB.migrateLocal(); toast(`${r.uploaded} transaksi dimuat naik`, 'ok'); }
-    catch (e) { toast('Gagal: ' + KantinDB.explainError(e), 'err'); }
+    mb.disabled = true; mb.textContent = t('settingsPage.migrateUploading');
+    try { const r = await KantinDB.migrateLocal(); toast(t('settingsPage.migrateDone', { n: r.uploaded }), 'ok'); }
+    catch (e) { toast(t('settingsPage.failedPrefix') + KantinDB.explainError(e), 'err'); }
     renderLocalBox();
   };
 }
 KantinDB.onState(renderStatus);
 
 $('deviceName').value = KantinDB.deviceName();
-$('saveDevice').onclick = () => { KantinDB.setDeviceName($('deviceName').value); toast('Nama peranti disimpan', 'ok'); };
+$('saveDevice').onclick = () => { KantinDB.setDeviceName($('deviceName').value); toast(t('settingsPage.deviceNameSaved'), 'ok'); };
 $('reloadBtn').onclick = () => location.reload();
-$('logoutBtn').onclick = async () => { if (await H.confirm({ title: 'Log keluar?', text: 'Anda perlu log masuk semula untuk menggunakan kaunter pada peranti ini.', ok: 'Log keluar' })) { await KantinDB.logout(); location.reload(); } };
+$('logoutBtn').onclick = async () => { if (await H.confirm({ title: t('settingsPage.logoutConfirmTitle'), text: t('settingsPage.logoutConfirmText'), ok: t('settingsPage.logout') })) { await KantinDB.logout(); location.reload(); } };
 $('testBtn').onclick = async () => {
-  const m = $('testMsg'); m.hidden = false; m.className = 'msg'; m.textContent = 'Menguji…';
+  const m = $('testMsg'); m.hidden = false; m.className = 'msg'; m.textContent = t('settingsPage.testing');
   const r = await KantinDB.testConnection();
   m.className = 'msg ' + (r.ok ? 'ok' : 'err'); m.textContent = r.message;
 };
 
 /* ---------------- backup / restore */
 $('backupJson').onclick = async () => {
-  try { const data = await KantinDB.exportAll(); KantinDB.downloadFile(`sandaran_kantin_${ymd(new Date())}.json`, JSON.stringify(data, null, 1), 'application/json'); toast(`Sandaran: ${data.sales.length} transaksi`, 'ok'); }
-  catch (e) { toast('Gagal: ' + KantinDB.explainError(e), 'err'); }
+  try { const data = await KantinDB.exportAll(); KantinDB.downloadFile(`sandaran_kantin_${ymd(new Date())}.json`, JSON.stringify(data, null, 1), 'application/json'); toast(t('settingsPage.backupDone', { n: data.sales.length }), 'ok'); }
+  catch (e) { toast(t('settingsPage.failedPrefix') + KantinDB.explainError(e), 'err'); }
 };
 $('backupCsv').onclick = async () => {
   try {
@@ -210,26 +274,26 @@ $('backupCsv').onclick = async () => {
     const rows = [['Tarikh', 'Masa', 'ID', 'Kaedah', 'Item', 'Subtotal (RM)', 'Pelarasan (RM)', 'Nota', 'Jumlah (RM)', 'Diterima (RM)', 'Baki (RM)', 'Peranti']];
     sales.forEach(s => rows.push([ymd(s.ts), fmtTime(s.ts), s.id, s.method === 'qr' ? 'QR' : 'Tunai', s.items.map(it => `${it.name} x${it.qty}`).join('; '), s.subtotal.toFixed(2), s.adj.toFixed(2), s.note, s.total.toFixed(2), s.paid.toFixed(2), s.change.toFixed(2), s.device]));
     KantinDB.downloadFile(`semua_transaksi_${ymd(new Date())}.csv`, csv(rows), 'text/csv;charset=utf-8');
-  } catch (e) { toast('Gagal: ' + KantinDB.explainError(e), 'err'); }
+  } catch (e) { toast(t('settingsPage.failedPrefix') + KantinDB.explainError(e), 'err'); }
 };
 $('restoreBtn').onclick = async () => {
   const f = $('restoreFile').files[0]; const m = $('restoreMsg');
-  if (!f) { toast('Pilih fail JSON dahulu', 'err'); return; }
-  let data; try { data = JSON.parse(await f.text()); } catch (e) { m.hidden = false; m.className = 'msg err'; m.textContent = 'Fail bukan JSON yang sah.'; return; }
+  if (!f) { toast(t('settingsPage.chooseJsonFirst'), 'err'); return; }
+  let data; try { data = JSON.parse(await f.text()); } catch (e) { m.hidden = false; m.className = 'msg err'; m.textContent = t('settingsPage.invalidJson'); return; }
   const sales = Array.isArray(data.sales) ? data.sales : Array.isArray(data) ? data : null;
-  if (!sales) { m.hidden = false; m.className = 'msg err'; m.textContent = 'Fail ini tidak mengandungi senarai transaksi.'; return; }
-  const withMenu = !!data.menu && await H.confirm({ title: 'Pulihkan menu juga?', text: 'Fail ini mengandungi menu. Gantikan menu semasa dengan menu dari fail?', ok: 'Ya, gantikan menu', cancel: 'Tidak, transaksi sahaja' });
-  if (!await H.confirm({ title: 'Pulihkan data?', text: `${sales.length} transaksi akan ditambah/dikemas kini${withMenu ? ' dan menu akan digantikan' : ''}. Transaksi sedia ada dengan ID sama akan ditulis ganti.`, ok: 'Pulihkan' })) return;
-  try { const r = await KantinDB.importAll({ sales, menu: data.menu }, { menu: withMenu }); m.hidden = false; m.className = 'msg ok'; m.textContent = `${r.sales} transaksi dipulihkan${r.menu ? ', menu digantikan' : ''}.`; renderLocalBox(); }
-  catch (e) { m.hidden = false; m.className = 'msg err'; m.textContent = 'Gagal: ' + KantinDB.explainError(e); }
+  if (!sales) { m.hidden = false; m.className = 'msg err'; m.textContent = t('settingsPage.noTxInFile'); return; }
+  const withMenu = !!data.menu && await H.confirm({ title: t('settingsPage.restoreMenuTitle'), text: t('settingsPage.restoreMenuText'), ok: t('settingsPage.restoreMenuYes'), cancel: t('settingsPage.restoreMenuNo') });
+  if (!await H.confirm({ title: t('settingsPage.restoreConfirmTitle'), text: t('settingsPage.restoreConfirmText', { n: sales.length, menu: withMenu ? t('settingsPage.andMenuReplaced') : '' }), ok: t('settingsPage.restoreBtn') })) return;
+  try { const r = await KantinDB.importAll({ sales, menu: data.menu }, { menu: withMenu }); m.hidden = false; m.className = 'msg ok'; m.textContent = t('settingsPage.restoreDone', { n: r.sales, menu: r.menu ? t('settingsPage.menuReplacedSuffix') : '' }); renderLocalBox(); }
+  catch (e) { m.hidden = false; m.className = 'msg err'; m.textContent = t('settingsPage.failedPrefix') + KantinDB.explainError(e); }
 };
 $('resetMenu').onclick = async () => {
-  if (!await H.confirm({ title: 'Tetapkan semula menu?', text: 'Menu semasa (termasuk item dan harga yang anda ubah) akan digantikan dengan senarai dalam menu-default.js.', ok: 'Tetapkan semula', danger: true })) return;
-  await KantinDB.resetMenuToDefault(); toast('Menu ditetapkan semula', 'ok');
+  if (!await H.confirm({ title: t('settingsPage.resetMenuConfirmTitle'), text: t('settingsPage.resetMenuConfirmText'), ok: t('settingsPage.resetMenuOk'), danger: true })) return;
+  await KantinDB.resetMenuToDefault(); toast(t('settingsPage.menuReset'), 'ok');
 };
 $('clearLocal').onclick = async () => {
-  if (!await H.confirm({ title: 'Padam data tempatan?', text: 'Semua transaksi dan menu yang disimpan dalam pelayar ini akan dipadam. Data cloud tidak terjejas.', ok: 'Padam', danger: true })) return;
-  KantinDB.clearLocal(); toast('Data tempatan dipadam', 'ok'); renderLocalBox();
+  if (!await H.confirm({ title: t('settingsPage.clearLocalConfirmTitle'), text: t('settingsPage.clearLocalConfirmText'), ok: t('common.delete'), danger: true })) return;
+  KantinDB.clearLocal(); toast(t('settingsPage.localDataCleared'), 'ok'); renderLocalBox();
 };
 
 KantinDB.ready({ loginOverlay: false }).then(() => { renderStatus(); if (!st.configured) $('guide').open = true; });
