@@ -16,7 +16,8 @@
     sales: 'hakaksado_sales_v1',      // same key as the original system
     menu: 'hakaksado_menu_v1',
     migrated: 'hakaksado_migrated_v1',
-    device: 'hakaksado_device_v1'
+    device: 'hakaksado_device_v1',
+    scale: 'hakaksado_scale_v1'
   };
 
   const CFG = window.KANTIN_CONFIG || {};
@@ -61,6 +62,101 @@
   const ymd = d => { d = new Date(d); return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`; };
   const lsGet = (k, dflt) => { try { const v = JSON.parse(localStorage.getItem(k)); return v == null ? dflt : v; } catch (e) { return dflt; } };
   const lsSet = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { console.error(e); } };
+
+  /* ---------------------------------------------------------- display size
+     One setting scales the whole interface (text, buttons, padding) because
+     every measurement in app.css is a rem off the root font-size. Saved per
+     device, like the language and the device name. */
+  const SCALES = ['m', 'l', 'xl'];
+  function scaleGet() { const v = lsGet(LS.scale, 'l'); return SCALES.includes(v) ? v : 'l'; }
+  function scaleApply(v) {
+    const el = document.documentElement;
+    if (!el) return;
+    if (v === 'm') el.removeAttribute('data-scale'); else el.setAttribute('data-scale', v);
+  }
+  function scaleSet(v) {
+    if (!SCALES.includes(v)) return scaleGet();
+    lsSet(LS.scale, v); scaleApply(v);
+    scaleListeners.forEach(f => { try { f(v); } catch (e) { console.error(e); } });
+    return v;
+  }
+  const scaleListeners = new Set();
+  scaleApply(scaleGet());          // run as early as possible to avoid a resize flash
+
+  /** Circular touch feedback on every button — one delegated listener for the
+   *  whole page, so nothing needs to opt in. The properties that keep the span
+   *  out of the layout are set inline as well as in app.css: every host here is
+   *  a flex container, and a ripple that is still in flow would stretch it. */
+  function initRipple() {
+    document.addEventListener('pointerdown', e => {
+      const el = e.target.closest('.btn, .keypad button, .item, .chip, .nav');
+      if (!el || el.disabled) return;
+      if (getComputedStyle(el).position === 'static') el.style.position = 'relative';
+      const r = el.getBoundingClientRect();
+      const d = Math.max(r.width, r.height) * 2.2;
+      const s = document.createElement('span');
+      s.className = 'ripple';
+      s.style.cssText = 'position:absolute;border-radius:50%;pointer-events:none;flex:none;margin:0;'
+        + `width:${d}px;height:${d}px;left:${e.clientX - r.left}px;top:${e.clientY - r.top}px`;
+      el.appendChild(s);
+      setTimeout(() => s.remove(), 600);
+    }, { passive: true });
+  }
+  if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document.addEventListener('DOMContentLoaded', initRipple);
+  }
+
+  /** Resize + compress an image file (or blob/dataURL) client-side so item photos
+   *  stay small — the whole menu is one Firestore document (1 MiB limit), so every
+   *  photo needs to be a tiny thumbnail, not a full-resolution upload. */
+  function compressImage(file, maxDim, quality) {
+    maxDim = maxDim || 220; quality = quality || 0.62;
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onerror = () => reject(new Error('Tidak dapat membaca fail.'));
+      reader.onload = () => {
+        const img = new Image();
+        img.onerror = () => reject(new Error('Fail bukan gambar yang sah.'));
+        img.onload = () => {
+          let w = img.naturalWidth, h = img.naturalHeight;
+          if (w > h) { if (w > maxDim) { h = Math.round(h * maxDim / w); w = maxDim; } }
+          else { if (h > maxDim) { w = Math.round(w * maxDim / h); h = maxDim; } }
+          const canvas = document.createElement('canvas');
+          canvas.width = w; canvas.height = h;
+          const ctx = canvas.getContext('2d');
+          ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, w, h);
+          ctx.drawImage(img, 0, 0, w, h);
+          resolve(canvas.toDataURL('image/jpeg', quality));
+        };
+        img.src = reader.result;
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  /** Open a small popup window with printable HTML and trigger the browser print
+   *  dialog once its content has loaded. Used for receipts. */
+  function printHtml(title, bodyHtml) {
+    const w = window.open('', '_blank', 'width=380,height=640');
+    if (!w) { toast('Pop-up disekat pelayar — benarkan pop-up untuk mencetak.', 'err'); return; }
+    w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${esc(title)}</title>
+      <style>
+        *{box-sizing:border-box;margin:0;padding:0}
+        body{font-family:ui-monospace,Menlo,Consolas,monospace;color:#111;padding:16px;font-size:12.5px;line-height:1.5}
+        h1{font-size:15px;text-align:center;margin-bottom:2px}
+        .c{text-align:center}
+        .muted{color:#555}
+        table{width:100%;border-collapse:collapse;margin-top:10px}
+        td{padding:2px 0;vertical-align:top}
+        td.r{text-align:right;white-space:nowrap}
+        hr{border:none;border-top:1px dashed #999;margin:8px 0}
+        .big{font-size:15px;font-weight:800}
+        @media print{ body{padding:0} }
+      </style></head><body>${bodyHtml}
+      <script>window.onload=function(){setTimeout(function(){window.print();},120);}<\/script>
+      </body></html>`);
+    w.document.close();
+  }
 
   function startClock(dateId, timeId) {
     const tick = () => {
@@ -137,7 +233,7 @@
   function normMenu(m) {
     m = m || {};
     const items = (Array.isArray(m.items) ? m.items : [])
-      .map(it => ({ id: String(it.id || uid('m')), name: String(it.name || '').trim(), price: money(it.price), cat: String(it.cat || 'Lain-lain').trim() || 'Lain-lain' }))
+      .map(it => ({ id: String(it.id || uid('m')), name: String(it.name || '').trim(), price: money(it.price), cat: String(it.cat || 'Lain-lain').trim() || 'Lain-lain', img: String(it.img || '') }))
       .filter(it => it.name);
     const cats = [...new Set([...(Array.isArray(m.cats) ? m.cats : []).map(c => String(c).trim()).filter(Boolean), ...items.map(it => it.cat)])];
     return { cats, items, updatedAt: Number(m.updatedAt) || 0 };
@@ -479,9 +575,9 @@
     wrap.appendChild(t);
     setTimeout(() => { t.style.transition = 'opacity .3s'; t.style.opacity = '0'; setTimeout(() => t.remove(), 320); }, ms || 2600);
   }
-  function modal(html) {
+  function modal(html, cls) {
     const back = document.createElement('div'); back.className = 'modal-back';
-    back.innerHTML = `<div class="modal" role="dialog" aria-modal="true">${html}</div>`;
+    back.innerHTML = `<div class="modal ${cls || ''}" role="dialog" aria-modal="true">${html}</div>`;
     document.body.appendChild(back);
     const close = () => back.remove();
     back.addEventListener('click', e => { if (e.target === back) { close(); back.dispatchEvent(new CustomEvent('cancel')); } });
@@ -522,6 +618,7 @@
     pendingLocalCount, migrateLocal, clearLocal, localSalesCount: () => localSalesRaw().length,
     exportAll, importAll, downloadFile, csv, testConnection, explainError,
     deviceName, setDeviceName, catStyle,
-    h: { rm, money, uid, esc, slug, csv, MONTHS, DAYS, pad, startOfDay, fmtDate, fmtShort, fmtTime, fmtTimeS, ymd, startClock, toast, confirm: confirmDlg, prompt: promptDlg, modal }
+    scale: { get: scaleGet, set: scaleSet, options: SCALES, onChange: f => { scaleListeners.add(f); return () => scaleListeners.delete(f); } },
+    h: { rm, money, uid, esc, slug, csv, MONTHS, DAYS, pad, startOfDay, fmtDate, fmtShort, fmtTime, fmtTimeS, ymd, startClock, toast, confirm: confirmDlg, prompt: promptDlg, modal, compressImage, printHtml }
   };
 })();
